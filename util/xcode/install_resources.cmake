@@ -61,3 +61,13 @@ execute_process(
 	"$ENV{SOURCE_ROOT}/textures/base/pack"
 	"${RESOURCES_DIR}/textures/base/pack"
 )
+
+# Ship the fork's default minetest.conf into the bundle's path_share so
+# that porting.cpp can seed it into path_user on first launch.
+if(EXISTS "$ENV{SOURCE_ROOT}/misc/ios/minetest.conf")
+	execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy
+		"$ENV{SOURCE_ROOT}/misc/ios/minetest.conf"
+		"${RESOURCES_DIR}/minetest.conf"
+	)
+endif()

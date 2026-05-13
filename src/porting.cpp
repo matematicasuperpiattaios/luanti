@@ -9,6 +9,8 @@
 */
 
 #include "porting.h"
+#include "filesys.h"
+#include "log.h"
 
 #if defined(__FreeBSD__)  || defined(__NetBSD__) || defined(__DragonFly__) || defined(__OpenBSD__)
 	#include <sys/types.h>
@@ -595,6 +597,25 @@ bool setSystemPaths()
 	// for iPhoneSimulator, TARGET_OS_IPHONE=1 and TARGET_OS_MAC=1
 #if TARGET_OS_IPHONE
 	path_user = getAppleDocumentsDirectory();
+
+	// Seed a default minetest.conf from the bundle (path_share) into
+	// path_user on first launch. Lets the fork ship preconfigured
+	// graphics/touch/accessibility defaults without hard-coding them
+	// in settingtypes.txt. In-game changes are written to path_user
+	// only — the bundled file is never modified at runtime.
+	{
+		const std::string bundled_conf = path_share + DIR_DELIM + "minetest.conf";
+		const std::string user_conf    = path_user  + DIR_DELIM + "minetest.conf";
+		if (!fs::PathExists(user_conf) && fs::PathExists(bundled_conf)) {
+			if (fs::CopyFileContents(bundled_conf, user_conf)) {
+				infostream << "Seeded default minetest.conf at first launch: "
+					<< user_conf << std::endl;
+			} else {
+				warningstream << "Failed to seed default minetest.conf at "
+					<< user_conf << std::endl;
+			}
+		}
+	}
 #elif TARGET_OS_MAC
 	auto user_path_env = getUserPathEnvVar();
 	if (user_path_env) {

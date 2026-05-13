@@ -5,9 +5,14 @@ set -euo pipefail
 # le deps gia' precompilate sotto luanti_ios_deps/ios18.2_deps/.
 # Lo script wrapper viene invocato con step=build: niente clone,
 # niente rebuild deps, solo cmake .. + generazione di luanti.xcodeproj.
+#
+# Lo script vive in tools/ios/ ma opera dalla root del repo: deps,
+# luanti_ios_deps/ e le build dir restano dove sono sempre state.
 
-cd "$(dirname "$0")"
-ROOT="$(pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$ROOT"
+
 DEPS_SIM="$ROOT/luanti_ios_deps/ios18.2_deps/iPhoneSimulator"
 DEPS_DEV="$ROOT/luanti_ios_deps/ios18.2_deps/iPhoneOS"
 
@@ -25,13 +30,13 @@ for d in build-ios-simulator build-ios-device; do
 done
 
 echo "==== Genera build-ios-simulator ===="
-./ios_build_with_deps_ios26-v2.sh \
+"$SCRIPT_DIR/ios_build_with_deps_ios26-v2.sh" \
   "" "" "$ROOT" "$DEPS_SIM" \
   Debug iPhoneSimulator 26 build build-ios-simulator
 
 echo
 echo "==== Genera build-ios-device ===="
-./ios_build_with_deps_ios26-v2.sh \
+"$SCRIPT_DIR/ios_build_with_deps_ios26-v2.sh" \
   "" "" "$ROOT" "$DEPS_DEV" \
   Debug iPhoneOS 26 build build-ios-device
 

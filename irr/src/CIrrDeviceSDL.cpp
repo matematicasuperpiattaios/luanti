@@ -31,6 +31,10 @@
 #include <cstdlib>
 #include <cassert>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 #ifdef _IRR_EMSCRIPTEN_PLATFORM_
 #include <emscripten.h>
 #endif
@@ -378,6 +382,29 @@ void CIrrDeviceSDL::resetReceiveTextInputEvents()
 			rect.y = pos.UpperLeftCorner.Y;
 			rect.w = pos.getWidth();
 			rect.h = pos.getHeight();
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+			// Su iOS SDL usa questa rect per traslare la UIView UIKit
+			// tenendo il campo di testo sopra la tastiera virtuale. Pero'
+			// SDL la interpreta in points UIKit, mentre Irrlicht le esprime
+			// in pixel di backbuffer: senza conversione, su display @2x/@3x
+			// lo shift e' 2-3 volte troppo grande e il campo finisce sotto
+			// la tastiera. Convertiamo px -> pt usando il rapporto
+			// windowSize / drawableSize.
+			{
+				int win_w = 0, win_h = 0, drw_w = 0, drw_h = 0;
+				SDL_GetWindowSize(Window, &win_w, &win_h);
+				SDL_GetWindowSizeInPixels(Window, &drw_w, &drw_h);
+				if (drw_w > 0 && drw_h > 0 && win_w > 0 && win_h > 0
+						&& (drw_w != win_w || drw_h != win_h)) {
+					float sx = (float)win_w / (float)drw_w;
+					float sy = (float)win_h / (float)drw_h;
+					rect.x = (int)(rect.x * sx);
+					rect.y = (int)(rect.y * sy);
+					rect.w = (int)(rect.w * sx);
+					rect.h = (int)(rect.h * sy);
+				}
+			}
+#endif
 #ifdef _IRR_USE_SDL3_
 			SDL_SetTextInputArea(Window, &rect, 10);
 #else

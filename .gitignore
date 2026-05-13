@@ -139,3 +139,10 @@ lib/irrlichtmt
 
 # Generated mod storage database
 client/mod_storage.sqlite
+
+## iOS build artifacts (matematicasuperpiatta fork)
+/build-ios-device/
+/build-ios-simulator/
+/luanti_ios_deps/
+/ios*_deps.tar.gz
+

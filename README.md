@@ -57,6 +57,39 @@ Quando finisce, `./tools/ios/build-ios.sh` per gli xcodeproj.
 
 > ⚠️ **Mai `step=all` o `step=clone` con `where_luanti=$PWD`**: lo script eseguirebbe `rm -fr $PWD` distruggendo il checkout corrente. `libs_all` non tocca `where_luanti`.
 
+## Impostazioni di default
+
+Il file `misc/ios/minetest.conf` contiene le impostazioni di default del fork (grafica, touch UI, accessibilità, server di default, ecc.). Viene incluso nel bundle iOS in `path_share/minetest.conf`. Al **primo lancio** dell'app, se l'utente non ha ancora un `Documents/minetest.conf`, la logica in `src/porting.cpp` (`#if TARGET_OS_IPHONE`) ce lo copia. Da quel momento in poi le modifiche in-game si scrivono solo in `Documents/`, e il file shipped non viene più toccato.
+
+### Modificare i default
+
+1. Edita `misc/ios/minetest.conf` (aggiungi/cambia le righe `chiave = valore`).
+2. Rigenera gli xcodeproj se necessario: `./tools/ios/build-ios.sh`.
+3. Ricompila in Xcode (⌘B). Il POST_BUILD step di `util/xcode/install_resources.cmake` copia il file aggiornato dentro `luanti.app/minetest.conf`.
+4. **Per propagare ai simulator/device già installati**: l'app va disinstallata e reinstallata, perché il copy-on-first-launch è gated su `!fs::PathExists(user_conf)`. Su simulator:
+
+   ```bash
+   xcrun simctl uninstall booted org.luanti.luanti
+   ```
+
+   Su device: long-press → Remove App, poi Run da Xcode.
+5. Commit + push.
+
+### Esportare i settings dopo aver giocato
+
+Pratico per catturare configurazioni complesse (touch layout, key bindings, ecc.) testandole sul simulator e poi promuoverle a default:
+
+```bash
+# 1) simulator booted, app installata e usata almeno una volta
+APP_DATA="$(xcrun simctl get_app_container booted org.luanti.luanti data)"
+cat "$APP_DATA/Documents/minetest.conf"
+
+# 2) se ti piace, sovrascrivi i default del repo
+cp "$APP_DATA/Documents/minetest.conf" misc/ios/minetest.conf
+```
+
+Su device fisico: Xcode → Window → Devices and Simulators → seleziona il device → Luanti nella lista → ingranaggio → Download Container → estrai `AppData/Documents/minetest.conf`.
+
 ## Sincronizzare il fork con sfence/luanti
 
 GitHub considera il fork "sincronizzato" guardando solo `master`. `sfence_ios` viene invece riscritto regolarmente da sfence (rebase/force-push), quindi serve un sync esplicito:

@@ -385,11 +385,9 @@ void GameFormSpec::showPauseMenu()
 		// TRANSLATORS: Pause menu button, try to keep the translation short
 		<< strgettext("Continue") << "]";
 
-	if (!simple_singleplayer_mode) {
-		os << "button[4," << (ypos++) << ";3,0.5;btn_change_password;"
-			// TRANSLATORS: Pause menu button, try to keep the translation short
-			<< strgettext("Change Password") << "]";
-	} else {
+	// MS: no Change Password button in the pause menu — account/password is
+	// handled by the MS login flow, not in-game.
+	if (simple_singleplayer_mode) {
 		os << "field[4.95,0;5,1.5;;" << strgettext("Game paused") << ";]";
 	}
 
@@ -397,13 +395,8 @@ void GameFormSpec::showPauseMenu()
 		// TRANSLATORS: Try to keep the translation short
 		<< strgettext("Settings") << "]";
 
-#ifndef __ANDROID__
-#if USE_SOUND
-	os << "button[4," << (ypos++) << ";3,0.5;btn_sound;"
-		// TRANSLATORS: Pause menu button, try to keep the translation short
-		<< strgettext("Sound Volume") << "]";
-#endif
-#endif
+	// MS: no Sound Volume button — volume is controlled by the device's
+	// hardware buttons on iOS.
 
 	os		<< "button_exit[4," << (ypos++) << ";3,0.5;btn_exit_menu;"
 		// TRANSLATORS: Pause menu button, try to keep the translation short

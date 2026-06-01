@@ -62,6 +62,17 @@ execute_process(
 	"${RESOURCES_DIR}/textures/base/pack"
 )
 
+# Ship the MS game into the bundle's path_share/games so it is the
+# default, selectable game on iOS (the games/ dir is not bundled by
+# default). Only the fork's game is shipped, not devtest.
+if(EXISTS "$ENV{SOURCE_ROOT}/games/matematicasuperpiatta/game.conf")
+	execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		"$ENV{SOURCE_ROOT}/games/matematicasuperpiatta"
+		"${RESOURCES_DIR}/games/matematicasuperpiatta"
+	)
+endif()
+
 # Ship the fork's default minetest.conf into the bundle's path_share so
 # that porting.cpp can seed it into path_user on first launch.
 if(EXISTS "$ENV{SOURCE_ROOT}/misc/ios/minetest.conf")

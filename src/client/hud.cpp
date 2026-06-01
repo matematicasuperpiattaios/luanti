@@ -95,7 +95,7 @@ Hud::Hud(Client *client, LocalPlayer *player,
 
 	if (m_mode == HIGHLIGHT_BOX) {
 		m_selection_material.Thickness =
-			rangelim(g_settings->getS16("selectionbox_width"), 1, 5);
+			rangelim(g_settings->getS16("selectionbox_width"), 1, 20);
 	} else if (m_mode == HIGHLIGHT_HALO) {
 		m_selection_material.setTexture(0, tsrc->getTextureForMesh("halo.png"));
 		m_selection_material.BackfaceCulling = true;
@@ -106,7 +106,7 @@ Hud::Hud(Client *client, LocalPlayer *player,
 	// Initialize m_block_bounds_material
 	m_block_bounds_material.MaterialType = video::EMT_SOLID;
 	m_block_bounds_material.Thickness =
-			rangelim(g_settings->getS16("selectionbox_width"), 1, 5);
+			rangelim(g_settings->getS16("selectionbox_width"), 1, 20);
 
 	// Prepare mesh for compass drawing
 	m_rotation_mesh_buffer.reset(new scene::SMeshBuffer());

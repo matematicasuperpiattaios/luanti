@@ -113,6 +113,7 @@ public:
 	Client(
 			const char *playername,
 			const std::string &password,
+			const std::string &token,
 			MapDrawControl &control,
 			IWritableTextureSource *tsrc,
 			IWritableShaderSource *shsrc,
@@ -535,6 +536,8 @@ private:
 	// Auth data
 	std::string m_playername;
 	std::string m_password;
+	// MS custom: auth token sent in TOSERVER_INIT, validated by MS servers.
+	std::string m_token;
 	// If set, this will be sent (and cleared) upon a TOCLIENT_ACCEPT_SUDO_MODE
 	std::string m_new_password;
 	// Usable by auth mechanisms.

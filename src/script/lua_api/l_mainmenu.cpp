@@ -134,6 +134,8 @@ int ModApiMainMenu::l_start(lua_State *L)
 		// There's no reason for these to have leading/trailing whitespace either.
 		data->address  = trim(getTextData(L, "address"));
 		data->port     = trim(getTextData(L, "port"));
+		// MS custom: auth token from the MS main menu (gamedata.token).
+		data->token    = getTextData(L, "token");
 
 		const auto val = getTextData(L, "allow_login_or_register");
 		if (val == "login")

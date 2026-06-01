@@ -679,7 +679,7 @@ if(BUILD_CLIENT)
 			MACOSX_BUNDLE TRUE
 			MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
 			RESOURCE "${client_RESOURCES}"
-			XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.luanti.luanti"
+			XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.stemblocks.matematicasuperpiatta"
 			XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME "YES"
 			XCODE_ATTRIBUTE_INSTALL_PATH "/Applications"
 			XCODE_ATTRIBUTE_SKIP_INSTALL "NO"
@@ -688,6 +688,15 @@ if(BUILD_CLIENT)
 			XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "$(inherited)"
 			XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${XCODE_CODE_SIGN_ENTITLEMENTS}"
 		)
+
+		# iOS app icon via asset catalog (macOS keeps its .icns from Info.plist).
+		if(NOT APPLE_MACOS)
+			target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/misc/ios/Assets.xcassets")
+			set_source_files_properties("${CMAKE_SOURCE_DIR}/misc/ios/Assets.xcassets"
+				PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+			set_target_properties(${PROJECT_NAME} PROPERTIES
+				XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
+		endif()
 
 		# Prinv env variables to file, for debugging purposes
 		#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

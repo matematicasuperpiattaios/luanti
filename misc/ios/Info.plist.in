@@ -15,7 +15,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>@PROJECT_NAME_CAPITALIZED@</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.luanti.luanti</string>
+	<string>com.stemblocks.matematicasuperpiatta</string>
 	<key>CFBundleVersion</key>
 	<string>@VERSION_STRING@</string>
 	<key>CFBundleShortVersionString</key>

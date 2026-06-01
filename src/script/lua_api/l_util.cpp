@@ -23,6 +23,8 @@
 #include "util/base64.h"
 #include "config.h"
 #include "version.h"
+#include "gettext.h"
+#include <clocale>
 #include "util/hex.h"
 #include "util/hashing.h"
 #include "util/png.h"
@@ -560,6 +562,23 @@ int ModApiUtil::l_get_version(lua_State *L)
 	return 1;
 }
 
+// get_language()
+int ModApiUtil::l_get_language(lua_State *L)
+{
+#ifdef _WIN32
+	char *locale = setlocale(LC_ALL, NULL);
+#else
+	char *locale = setlocale(LC_MESSAGES, NULL);
+#endif
+	std::string lang = gettext("LANG_CODE");
+	if (lang == "LANG_CODE")
+		lang.clear();
+
+	lua_pushstring(L, locale);
+	lua_pushstring(L, lang.c_str());
+	return 2;
+}
+
 int ModApiUtil::l_sha1(lua_State *L)
 {
 	NO_MAP_LOCK_REQUIRED;
@@ -769,6 +788,7 @@ void ModApiUtil::Initialize(lua_State *L, int top)
 	API_FCT(decode_base64);
 
 	API_FCT(get_version);
+	API_FCT(get_language);
 	API_FCT(sha1);
 	API_FCT(sha256);
 	API_FCT(colorspec_to_colorstring);
@@ -807,6 +827,7 @@ void ModApiUtil::InitializeClient(lua_State *L, int top)
 	API_FCT(decode_base64);
 
 	API_FCT(get_version);
+	API_FCT(get_language);
 	API_FCT(sha1);
 	API_FCT(sha256);
 	API_FCT(colorspec_to_colorstring);
@@ -887,6 +908,7 @@ void ModApiUtil::InitializeAsync(lua_State *L, int top)
 	API_FCT(decode_base64);
 
 	API_FCT(get_version);
+	API_FCT(get_language);
 	API_FCT(sha1);
 	API_FCT(sha256);
 	API_FCT(colorspec_to_colorstring);

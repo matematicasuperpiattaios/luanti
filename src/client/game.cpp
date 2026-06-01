@@ -1011,6 +1011,7 @@ bool Game::connectToServer(const GameStartData &start_data,
 	try {
 		client = new Client(start_data.name.c_str(),
 				start_data.password,
+				start_data.token,
 				*draw_control, texture_src, shader_src,
 				itemdef_manager, nodedef_manager, sound_manager.get(), eventmgr,
 				m_rendering_engine,

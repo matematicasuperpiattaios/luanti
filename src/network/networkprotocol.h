@@ -722,6 +722,7 @@ enum ToServerCommand : u16
 		u16 minimum supported network protocol version
 		u16 maximum supported network protocol version
 		std::string player name
+		std::string token        // MS custom: auth token, validated by MS servers
 	*/
 
 	TOSERVER_INIT2 = 0x11,

@@ -27,6 +27,8 @@ struct MainMenuData {
 	std::string port;
 	std::string name;
 	std::string password;
+	// MS custom: auth token passed to the game server in TOSERVER_INIT.
+	std::string token;
 	// Whether to reconnect
 	bool do_reconnect = false;
 

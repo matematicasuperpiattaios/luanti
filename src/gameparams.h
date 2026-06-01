@@ -34,6 +34,8 @@ struct GameStartData : GameParams
 
 	std::string name;
 	std::string password;
+	// MS custom: auth token passed to the game server in TOSERVER_INIT.
+	std::string token;
 	// If empty, we're hosting a server.
 	// This may or may not be in "simple singleplayer mode".
 	std::string address;

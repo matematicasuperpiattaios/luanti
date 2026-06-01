@@ -100,6 +100,9 @@ private:
 	// get_version()
 	static int l_get_version(lua_State *L);
 
+	// get_language()
+	static int l_get_language(lua_State *L);
+
 	// sha1(string, raw)
 	static int l_sha1(lua_State *L);
 

@@ -689,6 +689,15 @@ if(BUILD_CLIENT)
 			XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${XCODE_CODE_SIGN_ENTITLEMENTS}"
 		)
 
+		# iOS app icon via asset catalog (macOS keeps its .icns from Info.plist).
+		if(NOT APPLE_MACOS)
+			target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/misc/ios/Assets.xcassets")
+			set_source_files_properties("${CMAKE_SOURCE_DIR}/misc/ios/Assets.xcassets"
+				PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+			set_target_properties(${PROJECT_NAME} PROPERTIES
+				XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
+		endif()
+
 		# Prinv env variables to file, for debugging purposes
 		#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		#	COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_SOURCE_DIR}/util/xcode/capture_env.sh ${CMAKE_BINARY_DIR}/post_env.log

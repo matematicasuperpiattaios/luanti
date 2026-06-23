@@ -422,6 +422,14 @@ void GameFormSpec::showPauseMenu()
 		os << strgettext("Singleplayer");
 	}
 	os << "\n";
+	// Show which remote server we're connected to (the MS menu connects to a
+	// dynamically assigned game server, so surface its address here).
+	if (!simple_singleplayer_mode && !address.empty()) {
+		std::string addr = address;
+		str_formspec_escape(addr);
+		os << strgettext("- Address: ") << addr
+			<< ":" << m_client->getServerAddress().getPort() << "\n";
+	}
 	if (simple_singleplayer_mode || address.empty()) {
 		static const std::string on = strgettext("On");
 		static const std::string off = strgettext("Off");

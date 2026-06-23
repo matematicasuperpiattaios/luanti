@@ -64,6 +64,18 @@ dofile(menupath .. DIR_DELIM .. "dlg_delete_world.lua")
 dofile(menupath .. DIR_DELIM .. "dlg_register.lua")
 dofile(menupath .. DIR_DELIM .. "dlg_rename_modpack.lua")
 
+-- Compatibility shim: ms_mac's fstk provided ui.cleanup() (hide every child so
+-- the next dialog shown becomes the only visible toplevel). Luanti 5.16 removed
+-- it in favour of dlg:set_parent()/parent:hide(); the ported MS dialogs still
+-- call ui.cleanup(), so reinstate it with the original semantics.
+function ui.cleanup()
+	for _, value in pairs(ui.childlist) do
+		if value.hide then
+			value:hide()
+		end
+	end
+end
+
 -- Matematica Superpiatta-specific pieces (MS dlg_version_info overrides the
 -- vanilla one: it drives the launchpad/handshake update check).
 dofile(mspath .. "lib" .. DIR_DELIM .. "delay.lua")

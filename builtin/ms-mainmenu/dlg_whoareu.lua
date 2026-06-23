@@ -192,42 +192,56 @@ local function handle_passwd_buttons(this, fields, tabname, tabdata)
 			fields.passwd = string.sub(fields.passwd, 1, -2)
 		end
 		passwd = fields.passwd
-		local response = http.fetch_sync({
-			url = WISCOMS_URL .. "/api/token/",
-			timeout = 10,
-			post_data = { username = whoareu, password = passwd },
-		})
-		core.log("wiscom answer: " .. tostring(response.code))
-		if response == nil or response.code == 0 then
-			if string.find(whoareu, "demo") then
-				response = http.fetch_sync({
-					url = WISCOMS_URL_LOCAL .. "/api/token/",
+
+		-- Luanti 5.16 forbids fetch_sync on the main thread, so run the
+		-- WISCOMS auth request in an async worker (params only, no upvalues)
+		-- and handle the result in the callback, back on the main thread.
+		core.handle_async(
+			function(params)
+				local http = core.get_http_api()
+				local response = http.fetch_sync({
+					url = params.url,
 					timeout = 10,
-					post_data = { username = whoareu, password = passwd },
+					post_data = { username = params.user, password = params.pass },
 				})
-			end
-		end
-
-		if response.succeeded then
-			core.log("info", "Payload is " .. response.data)
-			local json = minetest.parse_json(response.data)
-			error_msg = handle_connection(json, whoareu, passwd)
-			if error_msg == '' then
-				return true
-			end
-		else
-			core.log("warning", "Error calling lambdaClient")
-			local error_dlg = create_fatal_error_dlg()
-			ui.cleanup()
-			error_dlg:show()
-			ui.update()
-			return true
-		end
-
-		local login_dlg = create_whoareu_dlg()
-		login_dlg:set_parent(this)
-		this:hide()
-		login_dlg:show()
+				if response == nil or response.code == 0 then
+					if string.find(params.user, "demo") then
+						response = http.fetch_sync({
+							url = params.url_local,
+							timeout = 10,
+							post_data = { username = params.user, password = params.pass },
+						})
+					end
+				end
+				return response
+			end,
+			{
+				url = WISCOMS_URL .. "/api/token/",
+				url_local = WISCOMS_URL_LOCAL .. "/api/token/",
+				user = whoareu,
+				pass = passwd,
+			},
+			function(response)
+				core.log("wiscom answer: " .. tostring(response and response.code))
+				if response ~= nil and response.succeeded then
+					core.log("info", "Payload is " .. response.data)
+					local json = minetest.parse_json(response.data)
+					error_msg = handle_connection(json, whoareu, passwd)
+					if error_msg ~= '' then
+						-- re-show the username dialog with the error message
+						local login_dlg = create_whoareu_dlg()
+						ui.cleanup()
+						login_dlg:show()
+						ui.update()
+					end
+				else
+					core.log("warning", "Error calling WISCOMS")
+					local error_dlg = create_fatal_error_dlg()
+					ui.cleanup()
+					error_dlg:show()
+					ui.update()
+				end
+			end)
 		return true
 	end
 
@@ -310,42 +324,53 @@ function handle_connection(json, user, pass)
 			handshake.is_demo_user = string.find(whoareu, "demo")
 
             wait_go(
-				function(core, handshake, gamedata)
+				-- No parameters: core/handshake/gamedata are globals. Naming
+				-- them as params would shadow the global `core`, and the async
+				-- worker below would then capture it as an upvalue that does
+				-- not survive serialisation into the worker's Lua state.
+				function()
 					gamedata.address    = handshake.roadmap.server.ip
 					gamedata.port       = handshake.roadmap.server.port
 
-					-- debug
-					--core.log("warning", "ACCESS: " .. gamedata.access)
-					--core.log("warning", "ROADMAP: " .. core.write_json(handshake.roadmap))
-					local http = core.get_http_api()
-					local extra_headers = {
-						"Authorization: Bearer " .. gamedata.access,
-						"Content-Type: application/json"
-					}
-					local post_data = core.write_json({
-						server_info = handshake.roadmap.server_info,
-						client_info = handshake.roadmap.client_info
-					})
-					local url = handshake.wiscoms_url .. "/api/users/me/server_info"
-				    local response = http.fetch_sync({
-						url = url,
-						extra_headers = extra_headers,
-						timeout = 10,
-						post_data = post_data
-					})
-					if response == nil or response.code == 0 then
-						if handshake.is_demo_user then
-							url = handshake.wiscoms_url_local .. "/api/users/me/server_info"
+					-- Register server_info with WISCOMS asynchronously (5.16
+					-- forbids fetch_sync on the main thread), then start the
+					-- game in the callback.
+					core.handle_async(
+						function(params)
+							local http = core.get_http_api()
 							local response = http.fetch_sync({
-								url = url,
-								extra_headers = extra_headers,
+								url = params.url,
+								extra_headers = params.extra_headers,
 								timeout = 10,
-								post_data = post_data
+								post_data = params.post_data,
 							})
-						end
-					end
-					core.log("warning", gamedata.address .. ':' .. gamedata.port)
-					core.start()
+							if (response == nil or response.code == 0) and params.is_demo then
+								http.fetch_sync({
+									url = params.url_local,
+									extra_headers = params.extra_headers,
+									timeout = 10,
+									post_data = params.post_data,
+								})
+							end
+							return true
+						end,
+						{
+							url = handshake.wiscoms_url .. "/api/users/me/server_info",
+							url_local = handshake.wiscoms_url_local .. "/api/users/me/server_info",
+							extra_headers = {
+								"Authorization: Bearer " .. gamedata.access,
+								"Content-Type: application/json",
+							},
+							post_data = core.write_json({
+								server_info = handshake.roadmap.server_info,
+								client_info = handshake.roadmap.client_info
+							}),
+							is_demo = handshake.is_demo_user and true or false,
+						},
+						function()
+							core.log("warning", gamedata.address .. ':' .. gamedata.port)
+							core.start()
+						end)
 				end)
             return ""
         end

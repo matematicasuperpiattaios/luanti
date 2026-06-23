@@ -56,13 +56,20 @@ elseif INIT == "mainmenu" then
 	local mm_script = core.settings:get("main_menu_script")
 	local custom_loaded = false
 	if mm_script and mm_script ~= "" then
-		local testfile = io.open(mm_script, "r")
-		if testfile then
-			testfile:close()
-			dofile(mm_script)
-			custom_loaded = true
-			core.log("info", "Loaded custom main menu script: "..mm_script)
-		else
+		-- Resolve relative to the builtin dir first (so a setting like
+		-- "ms-mainmenu/init.lua" works regardless of the working directory),
+		-- then fall back to the value as given (absolute path).
+		for _, path in ipairs({ scriptdir .. mm_script, mm_script }) do
+			local testfile = io.open(path, "r")
+			if testfile then
+				testfile:close()
+				dofile(path)
+				custom_loaded = true
+				core.log("info", "Loaded custom main menu script: "..path)
+				break
+			end
+		end
+		if not custom_loaded then
 			core.log("error", "Failed to load custom main menu script: "..mm_script)
 			core.log("info", "Falling back to default main menu script")
 		end

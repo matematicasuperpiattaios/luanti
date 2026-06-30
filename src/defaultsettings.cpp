@@ -114,6 +114,10 @@ void set_default_settings()
 	settings->setDefault("screenshot_quality", "0");
 	settings->setDefault("client_unload_unused_data_timeout", "600");
 	settings->setDefault("client_mapblock_limit", "7500"); // about 120 MB
+	// Memory budget for the transient image cache held during node-def texture
+	// init (fillNodeVisuals). 0 = unlimited (default). On low-RAM/mobile this
+	// caps the peak: when exceeded the cache is flushed and images regenerated.
+	settings->setDefault("image_cache_budget_mb", "0");
 	settings->setDefault("enable_build_where_you_stand", "false");
 	settings->setDefault("curl_timeout", "20000");
 	settings->setDefault("secure.curl_proxy", "");

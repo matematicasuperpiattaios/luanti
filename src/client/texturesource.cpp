@@ -138,6 +138,13 @@ private:
 	// Caches finished texture images before they are uploaded to the GPU
 	// (main thread use only)
 	std::unordered_map<std::string, ImageInfo> m_image_cache;
+	// Approximate bytes currently held in m_image_cache, and an optional memory
+	// budget (0 = unlimited). When the budget is exceeded the cache is flushed
+	// to bound the transient peak during fillNodeVisuals (mobile OOM mitigation).
+	u64 m_image_cache_bytes = 0;
+	u64 m_image_cache_budget = 0;
+	// Drop all cached images and clear the cache (keeps caching enabled).
+	void flushImageCache();
 
 	// Rebuild a single texture
 	void rebuildTexture(video::IVideoDriver *driver, TextureInfo &ti);
@@ -240,8 +247,21 @@ video::IImage *TextureSource::getOrGenerateImage(const std::string &name,
 	std::set<std::string> tmp;
 	auto *img = m_imagesource.generateImage(name, tmp);
 	if (img && m_image_cache_enabled) {
+		// Enforce the optional memory budget: if adding this image would push
+		// the cache over budget, flush it first. The cache is a pure
+		// optimization (anything still needed is re-generated on demand), so
+		// this only trades CPU for a bounded peak — the fix for mobile OOM.
+		const u64 img_bytes = img->getImageDataSizeInBytes();
+		if (m_image_cache_budget > 0 && !m_image_cache.empty() &&
+				m_image_cache_bytes + img_bytes > m_image_cache_budget) {
+			infostream << "TextureSource: image cache over budget ("
+					<< (m_image_cache_bytes >> 20) << " MiB, "
+					<< m_image_cache.size() << " imgs) -> flush" << std::endl;
+			flushImageCache();
+		}
 		img->grab();
 		m_image_cache[name] = {img, tmp};
+		m_image_cache_bytes += img_bytes;
 	}
 	source_image_names.merge(tmp);
 	return img;
@@ -668,14 +688,25 @@ core::dimension2du TextureSource::getTextureDimensions(const std::string &name)
 	return ret;
 }
 
+void TextureSource::flushImageCache()
+{
+	for (const auto &it : m_image_cache) {
+		assert(it.second.image);
+		it.second.image->drop();
+	}
+	m_image_cache.clear();
+	m_image_cache_bytes = 0;
+}
+
 void TextureSource::setImageCaching(bool enabled)
 {
 	m_image_cache_enabled = enabled;
-	if (!enabled) {
-		for (const auto &it : m_image_cache) {
-			assert(it.second.image);
-			it.second.image->drop();
-		}
-		m_image_cache.clear();
+	if (enabled) {
+		// Read the (optional) memory budget for the cache. 0 = unlimited.
+		u32 budget_mb = 0;
+		g_settings->getU32NoEx("image_cache_budget_mb", budget_mb);
+		m_image_cache_budget = (u64)budget_mb * 1024 * 1024;
+	} else {
+		flushImageCache();
 	}
 }

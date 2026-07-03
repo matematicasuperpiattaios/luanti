@@ -366,6 +366,10 @@ private:
 
 	core::rect<s32> lastElemPos;
 
+	// iOS: the focused element we last opened the soft keyboard for, so a user
+	// dismiss (Return) can be told apart from a fresh focus and not reopened.
+	gui::IGUIElement *imeElem = nullptr;
+
 	// TODO: This is only used for scancode/keycode conversion with EKEY_CODE (among other things, for Luanti
 	// to display keys to users). Drop this along with EKEY_CODE.
 	std::unordered_map<SDL_Keycode, EKEY_CODE> KeyMap;

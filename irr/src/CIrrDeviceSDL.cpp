@@ -375,6 +375,16 @@ void CIrrDeviceSDL::resetReceiveTextInputEvents()
 		// sent as text input events instead of the result) when
 		// SDL_StartTextInput() is called on the same input box.
 		core::rect<s32> pos = elem->getAbsolutePosition();
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+		// If the user dismissed the soft keyboard (RETURN_KEY_HIDES_IME) while
+		// this same field kept focus, drop the focus instead of re-opening the
+		// keyboard on the next frame.
+		if (!SDL_TextInputActive(Window) && elem == imeElem) {
+			imeElem = nullptr;
+			GUIEnvironment->removeFocus(elem);
+			return;
+		}
+#endif
 		if (!SDL_TextInputActive(Window) || lastElemPos != pos) {
 			lastElemPos = pos;
 			SDL_Rect rect;
@@ -411,8 +421,14 @@ void CIrrDeviceSDL::resetReceiveTextInputEvents()
 			SDL_SetTextInputRect(&rect);
 #endif
 			SDL_StartTextInput(Window);
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+			imeElem = elem;
+#endif
 		}
 	} else {
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+		imeElem = nullptr;
+#endif
 		SDL_StopTextInput(Window);
 	}
 }

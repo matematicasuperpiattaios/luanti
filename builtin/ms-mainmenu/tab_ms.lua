@@ -40,10 +40,11 @@ local function get_formspec(tabview, name, tabdata)
 			x=5.66, y=0.15, w=7.68, h=3.17,
 			path = texturedir .. "logo_320x132.png"}:render() ..
 
-		-- Attribution: "based on" (localized) + Luanti wordmark image
-		Label:new{x=7.0, y=3.66, label = ms_S("based on")}:render() ..
+		-- Attribution: "based on" (localized) + Luanti wordmark image,
+		-- tucked right under the MS logo (grouped with it, not the caption below)
+		Label:new{x=7.0, y=3.4, label = ms_S("based on")}:render() ..
 		Image:new{
-			x=9.7, y=3.42, w=2.5, h=0.48,
+			x=9.7, y=3.16, w=2.5, h=0.48,
 			path = texturedir .. "luanti_wordmark.png"}:render() ..
 
 		-- UnivAQ block + institutional caption, bottom-left

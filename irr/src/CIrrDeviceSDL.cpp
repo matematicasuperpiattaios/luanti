@@ -1218,21 +1218,6 @@ bool CIrrDeviceSDL::run()
 			if (!Keycode::isValid(key))
 				os::Printer::log("keycode not mapped", core::stringc(keysym), ELL_DEBUG);
 
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-			// iOS: the soft keyboard has no dismiss button and can cover the
-			// dialog buttons. Make its Return key close the keyboard: drop the
-			// focus and stop text input, and consume the event (SDL keeps text
-			// input active on Return, so it would otherwise reopen instantly).
-			if (key == KEY_RETURN && SDL_event.type == SDL_EVENT_KEY_DOWN) {
-				gui::IGUIElement *focused = GUIEnvironment->getFocus();
-				if (focused && focused->acceptsIME()) {
-					GUIEnvironment->removeFocus(focused);
-					SDL_StopTextInput(Window);
-					break;
-				}
-			}
-#endif
-
 			// Make sure to only input special characters if something is in focus,
 			// as SDL_EVENT_TEXT_INPUT handles normal unicode already
 			if (SDL_TextInputActive(Window) && !keyIsKnownSpecial(key) && (keymod & SDL_KMOD_CTRL) == 0)

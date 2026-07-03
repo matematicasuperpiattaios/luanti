@@ -92,7 +92,7 @@ function Handshake:launchpad()
 					ms_type = "full",
 					dev_phase = "release",
 					server_type = "ecs",
-					lang = global_language,
+					lang = ms_current_lang(),
 					debug = "false",
 					ticket = self.roadmap.server.ticket,
 					access = self.token,

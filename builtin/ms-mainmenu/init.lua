@@ -96,7 +96,8 @@ global_data = {
 global_version_checked = false
 global_os = "ios"
 global_ms_type = "full"
-global_language = "en"
+-- Language sent to the discovery Lambda is resolved live via ms_current_lang()
+-- in handshake.lua (was a hardcoded global_language = "en").
 lambda_waiting = false
 lambda_read = true
 lambda_error = false

@@ -375,16 +375,6 @@ void CIrrDeviceSDL::resetReceiveTextInputEvents()
 		// sent as text input events instead of the result) when
 		// SDL_StartTextInput() is called on the same input box.
 		core::rect<s32> pos = elem->getAbsolutePosition();
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-		// If the user dismissed the soft keyboard (RETURN_KEY_HIDES_IME) while
-		// this same field kept focus, drop the focus instead of re-opening the
-		// keyboard on the next frame.
-		if (!SDL_TextInputActive(Window) && elem == imeElem) {
-			imeElem = nullptr;
-			GUIEnvironment->removeFocus(elem);
-			return;
-		}
-#endif
 		if (!SDL_TextInputActive(Window) || lastElemPos != pos) {
 			lastElemPos = pos;
 			SDL_Rect rect;
@@ -421,14 +411,8 @@ void CIrrDeviceSDL::resetReceiveTextInputEvents()
 			SDL_SetTextInputRect(&rect);
 #endif
 			SDL_StartTextInput(Window);
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-			imeElem = elem;
-#endif
 		}
 	} else {
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-		imeElem = nullptr;
-#endif
 		SDL_StopTextInput(Window);
 	}
 }
@@ -459,13 +443,6 @@ CIrrDeviceSDL::CIrrDeviceSDL(const SIrrlichtCreationParameters &param) :
 
 		// Minetest has its own signal handler
 		SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
-
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-		// iOS: the iPhone soft keyboard has no dismiss button, so let its
-		// Return key hide it. Without this the keyboard can cover the dialog
-		// buttons with no way to close it.
-		SDL_SetHint(SDL_HINT_RETURN_KEY_HIDES_IME, "1");
-#endif
 
 		// Disabling the compositor is not a good idea in windowed mode.
 		// see <https://github.com/luanti-org/luanti/issues/14596>
@@ -1240,6 +1217,21 @@ bool CIrrDeviceSDL::run()
 
 			if (!Keycode::isValid(key))
 				os::Printer::log("keycode not mapped", core::stringc(keysym), ELL_DEBUG);
+
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+			// iOS: the soft keyboard has no dismiss button and can cover the
+			// dialog buttons. Make its Return key close the keyboard: drop the
+			// focus and stop text input, and consume the event (SDL keeps text
+			// input active on Return, so it would otherwise reopen instantly).
+			if (key == KEY_RETURN && SDL_event.type == SDL_EVENT_KEY_DOWN) {
+				gui::IGUIElement *focused = GUIEnvironment->getFocus();
+				if (focused && focused->acceptsIME()) {
+					GUIEnvironment->removeFocus(focused);
+					SDL_StopTextInput(Window);
+					break;
+				}
+			}
+#endif
 
 			// Make sure to only input special characters if something is in focus,
 			// as SDL_EVENT_TEXT_INPUT handles normal unicode already

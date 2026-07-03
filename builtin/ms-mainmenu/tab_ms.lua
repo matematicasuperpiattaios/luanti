@@ -44,7 +44,19 @@ local function get_formspec(tabview, name, tabdata)
 	}
 	local logo = logos[ms_current_lang()] or logos.en
 
+	-- TEMP diagnostic: window metrics + scaling settings, to read off a device
+	-- screenshot (real_gui_scaling is the effective density that shrinks text).
+	local wi = core.get_window_info()
+	local diag = string.format(
+		"DIAG px=%dx%d mfs=%.1fx%.1f rgs=%.2f | gs=%s fs=%s ddf=%s sw=%s sh=%s",
+		wi.size.x, wi.size.y, wi.max_formspec_size.x, wi.max_formspec_size.y,
+		wi.real_gui_scaling, tostring(core.settings:get("gui_scaling")),
+		tostring(core.settings:get("font_size")),
+		tostring(core.settings:get("display_density_factor")),
+		tostring(core.settings:get("screen_w")), tostring(core.settings:get("screen_h")))
+
 	local fs = FormspecVersion:new{version=6}:render() ..
+		Label:new{x=0.2, y=0.05, label = diag}:render() ..
 	    -- Title logo (localized), centred horizontally in the 19-wide tab
 		Image:new{
 			x=(19 - logo.w) / 2, y=0.15, w=logo.w, h=3.17,

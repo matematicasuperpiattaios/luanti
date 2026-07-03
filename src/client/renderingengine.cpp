@@ -4,9 +4,6 @@
 // Copyright (C) 2017 nerzhul, Loic Blot <loic.blot@unix-experience.fr>
 
 #include <optional>
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
-#endif
 #include <irrlicht.h>
 #include "IMeshCache.h"
 #include "fontengine.h"
@@ -166,16 +163,7 @@ RenderingEngine::RenderingEngine(MyEventReceiver *receiver)
 
 	// Resolution selection
 	bool fullscreen = g_settings->getBool("fullscreen");
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-	// iOS is always native fullscreen. Ignore any saved screen_w/h:
-	// autosave_screensize persists the drawable *pixel* size (e.g. 2622x1206),
-	// and feeding that back as the window size collapses the retina window scale
-	// (ScaleX = drawable/window -> 1.0), shrinking all text after a restart.
-	// Use a 1x1 placeholder (as a fresh install did via max(0,1)); 0 would make
-	// SDL use the canvas/drawable size and also collapse the scale.
-	u16 screen_w = 1, screen_h = 1;
-	bool window_maximized = false;
-#elif defined(__ANDROID__)
+#ifdef __ANDROID__
 	u16 screen_w = 0, screen_h = 0;
 	bool window_maximized = false;
 #else

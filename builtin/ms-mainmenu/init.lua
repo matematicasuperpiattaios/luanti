@@ -158,25 +158,6 @@ local function init_globals()
 	-- wordmark (we show our own MS logo inside the tab).
 	mm_game_theme.set_engine(true)
 
-	-- Dynamic scaling: render the fixed MAIN_TAB_W-wide design at ~90% of the
-	-- screen width on ANY device. A fixed formspec size otherwise ends up a
-	-- different physical fraction on each device (its density is auto-detected),
-	-- which is why the menu looked smaller on some phones than in the simulator.
-	-- max_formspec_size scales as 1/gui_scaling, so we solve for the gui_scaling
-	-- that fills 90% width, capped so the whole menu still fits the height. This
-	-- is a fixed point: once it fills 90%, re-running yields the same value.
-	do
-		local wi = core.get_window_info()
-		local cur_gs = tonumber(core.settings:get("gui_scaling")) or 1.0
-		local touch = core.settings:get_bool("touch_gui")
-		local total_h = MAIN_TAB_H + TABHEADER_H +
-			(touch and GAMEBAR_OFFSET_TOUCH or GAMEBAR_OFFSET_DESKTOP) + GAMEBAR_H
-		local gs_w = cur_gs * wi.max_formspec_size.x * 0.90 / MAIN_TAB_W
-		local gs_h = cur_gs * wi.max_formspec_size.y * 0.98 / total_h
-		-- Higher gui_scaling => smaller menu; take whichever constraint binds.
-		core.settings:set("gui_scaling", string.format("%.4f", math.max(gs_w, gs_h)))
-	end
-
 	-- Create main tabview: MS login tab + About (Settings is an end button)
 	local tv_main = tabview_create("maintab", {x = MAIN_TAB_W, y = MAIN_TAB_H}, {x = 0, y = 0})
 

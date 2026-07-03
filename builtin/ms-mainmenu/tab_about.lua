@@ -123,8 +123,9 @@ return {
 			"style_type[label;font_size=*0.9]" ..
 			"style_type[table;font_size=*0.8]" ..
 
-			-- Left column: app icon, title, links
-			"image[0.5,0.35;2.2,2.2;" .. core.formspec_escape(logofile) .. "]" ..
+			-- Left column: MS cube icon + Luanti logo side by side, title, links
+			"image[0.5,0.55;2.0,2.0;" .. core.formspec_escape(defaulttexturedir .. "ms_cube_icon.png") .. "]" ..
+			"image[2.6,0.55;2.0,2.0;" .. core.formspec_escape(logofile) .. "]" ..
 			"style[label_button;border=false]" ..
 			"button[0.2,2.85;5.3,0.7;label_button;" .. core.formspec_escape("Matematica Superpiatta 1.3") .. "]" ..
 			"tooltip[ms_site;" .. ms_S("Visit the website") .. "]" ..

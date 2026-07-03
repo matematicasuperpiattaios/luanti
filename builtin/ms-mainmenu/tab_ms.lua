@@ -35,27 +35,33 @@ local function get_formspec(tabview, name, tabdata)
 	end
 
 	local fs = FormspecVersion:new{version=6}:render() ..
-	    -- Title
+	    -- Title logo, centred horizontally in the 19-wide tab
 		Image:new{
-			x=2.20, y=-0.4, w=7.68, h=3.17,
+			x=5.66, y=0.15, w=7.68, h=3.17,
 			path = texturedir .. "logo_320x132.png"}:render() ..
-		Image:new{
-			x=4.15, y=2.5, w=3, h=0.378,
-			path = texturedir .. "menu_header.png"}:render() ..
 
+		-- Attribution: "based on" (localized) + Luanti wordmark image
+		Label:new{x=7.0, y=3.66, label = ms_S("based on")}:render() ..
 		Image:new{
-			x=0.10, y=3.6, w=2, h=2,
+			x=9.7, y=3.42, w=2.5, h=0.48,
+			path = texturedir .. "luanti_wordmark.png"}:render() ..
+
+		-- UnivAQ block + institutional caption, bottom-left
+		Image:new{
+			x=0.4, y=4.0, w=2.4, h=2.4,
 			path = texturedir .."univaq_block_image_small.png"}:render() ..
 
-		Label:new{x=4.9, y=2, label = fgettext("based on")}:render() ..
-		Label:new{x=2, y=4.1, label = fgettext("Università degli Studi of L'Aquila")}:render() ..
-		Label:new{x=2, y=4.5, label = fgettext("spin-off")}:render() .. Style:new{
+		Label:new{x=3.0, y=4.3, label = ms_S("University of L'Aquila")}:render() ..
+		Label:new{x=3.0, y=4.8, label = ms_S("spin-off")}:render() ..
+
+		-- Start button, bottom-right (previously empty area, clear of the caption)
+		Style:new{
 			selectors = {"btn_mp_connect"},
 			props = {"bgcolor=#00dc28", "font=bold", "alpha=false"} --orig: #00993b
 		}:render() ..
-		Button:new{x=9, y=4.2, w=2.5, h=1.75, name = "btn_mp_connect", label = fgettext("Start")}:render()
+		Button:new{x=14.6, y=4.3, w=3.8, h=2.0, name = "btn_mp_connect", label = ms_S("Start")}:render()
 	return fs .. StyleType:new{selectors = {"label"}, props = {"font=italic"}}:render() ..
-	Label:new{x=2, y=4.9, label = fgettext("www.matematicasuperpiatta.it")}:render()
+	Label:new{x=3.0, y=5.3, label = fgettext("www.matematicasuperpiatta.it")}:render()
 end
 
 --------------------------------------------------------------------------------

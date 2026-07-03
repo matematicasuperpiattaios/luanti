@@ -9,7 +9,7 @@
 -- dlg_version_info, oop/handshake, oop/oo_formspec, lib/delay) are ported
 -- from ms_mac.
 
-MAIN_TAB_W = 15.5
+MAIN_TAB_W = 19
 MAIN_TAB_H = 7.1
 TABHEADER_H = 0.85
 GAMEBAR_H = 1.25
@@ -78,6 +78,7 @@ end
 
 -- Matematica Superpiatta-specific pieces (MS dlg_version_info overrides the
 -- vanilla one: it drives the launchpad/handshake update check).
+dofile(mspath .. "lib" .. DIR_DELIM .. "i18n.lua")
 dofile(mspath .. "lib" .. DIR_DELIM .. "delay.lua")
 dofile(mspath .. "oop" .. DIR_DELIM .. "handshake.lua")
 dofile(mspath .. "oop" .. DIR_DELIM .. "oo_formspec.lua")
@@ -153,7 +154,9 @@ local function init_globals()
 	menudata.worldlist:set_sortmode("alphabetic")
 
 	mm_game_theme.init()
-	mm_game_theme.set_engine()
+	-- hide_decorations=true: drop the engine's stale "MINETEST" header/footer
+	-- wordmark (we show our own MS logo inside the tab).
+	mm_game_theme.set_engine(true)
 
 	-- Create main tabview: MS login tab + About (Settings is an end button)
 	local tv_main = tabview_create("maintab", {x = MAIN_TAB_W, y = MAIN_TAB_H}, {x = 0, y = 0})

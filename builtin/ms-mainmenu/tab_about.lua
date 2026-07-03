@@ -118,35 +118,40 @@ return {
 	cbf_formspec = function(tabview, name, tabdata)
 		local logofile = defaulttexturedir .. "logo.png"
 		local fs = "formspec_version[6]" ..
-		    "image[0.75,0.5;2.2,2.2;" .. core.formspec_escape(logofile) .. "]" ..
+			-- Smaller fonts so captions and the long credits lines fit this panel
+			"style_type[button;font_size=*0.85]" ..
+			"style_type[label;font_size=*0.9]" ..
+			"style_type[table;font_size=*0.8]" ..
+
+			-- Left column: app icon, title, links
+			"image[0.5,0.35;2.2,2.2;" .. core.formspec_escape(logofile) .. "]" ..
 			"style[label_button;border=false]" ..
-			"button[0,2;3.5,2;label_button;" .. core.formspec_escape("Matematica Superpiatta 1.3") .. "]" ..
-			"button[0,4;3.5,1;homepage;luanti.org]" ..
+			"button[0.2,2.85;5.3,0.7;label_button;" .. core.formspec_escape("Matematica Superpiatta 1.3") .. "]" ..
+			"tooltip[ms_site;" .. ms_S("Visit the website") .. "]" ..
+			"button[0.4,3.75;4.8,0.8;ms_site;" .. core.formspec_escape("matematicasuperpiatta.it") .. "]" ..
+			"button[0.4,4.8;4.8,0.8;homepage;luanti.org]" ..
 
-			"tooltip[ms_site;" .. fgettext("Visita il sito") .. "]" ..
-			"button[0,2.75;3.5,2;ms_site;" .. fgettext("matematicasuperpiatta.it") .. "]" ..
-
+			-- Right column: scrolling credits table (starts below the tab header)
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
-			"table[3.5,-0.25;8.5,6.05;list_credits;" ..
-			"," .. fgettext("Matematica Superpiatta è un fork open source di Luanti.") .. ",," ..
-			fgettext("Codice sorgente: https://github.com/matematicasuperpiattaios/luanti") .. ",,," ..
-			"#FFFF00," .. fgettext("Sviluppatori Matematica Superpiatta (client e server)") .. ",," ..
+			"table[6.0,0.15;12.7,6.2;list_credits;" ..
+			"," .. ms_S("Matematica Superpiatta is an open-source fork of Luanti.") .. ",," ..
+			ms_S("Source code:") .. " github.com/matematicasuperpiattaios/luanti" .. ",,," ..
+			"#FFFF00," .. ms_S("Matematica Superpiatta developers (client and server)") .. ",," ..
 			buildCreditList(matematica_superpiatta) .. ",,," ..
-			"#FFFF00," .. fgettext("Luanti — Core Developers") .. ",," ..
+			"#FFFF00,Luanti — " .. ms_S("Core Developers") .. ",," ..
 			buildCreditList(core_developers) .. ",,," ..
-			"#FFFF00," .. fgettext("Luanti — Active Contributors") .. ",," ..
+			"#FFFF00,Luanti — " .. ms_S("Active Contributors") .. ",," ..
 			buildCreditList(active_contributors) .. ",,," ..
-			"#FFFF00," .. fgettext("Luanti — Previous Core Developers") ..",," ..
+			"#FFFF00,Luanti — " .. ms_S("Previous Core Developers") .. ",," ..
 			buildCreditList(previous_core_developers) .. ",,," ..
-			"#FFFF00," .. fgettext("Luanti — Previous Contributors") .. ",," ..
+			"#FFFF00,Luanti — " .. ms_S("Previous Contributors") .. ",," ..
 			buildCreditList(previous_contributors) .. "," ..
-			";1]"
+			";1]" ..
 
-		-- Render information
-		fs = fs .. "label[0.75,4.9;" ..
-			fgettext("Active renderer:") .. "\n" ..
-			core.formspec_escape(core.get_active_renderer()) .. "]"
+			-- Renderer info along the bottom, below the table
+			"label[0.3,6.6;" .. ms_S("Active renderer:") .. " " ..
+				core.formspec_escape(core.get_active_renderer()) .. "]"
 
 		return fs
 	end,

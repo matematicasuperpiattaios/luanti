@@ -17,13 +17,17 @@
 
 --------------------------------------------------------------------------------
 
+-- Sviluppatori di Matematica Superpiatta (client + server), in ordine.
 local matematica_superpiatta = {
-	"Questa è una versione modificata di minetest per l'accesso",
-	"esclusivo e semplificato al server matematicasuperpiatta.it.";
-	"Il codice è disponibile su https://github.com/matematicasuperpiatta/minetest",
 	"Leonardo Guidoni <leonardo.guidoni@stemblocks.it>",
+	"Robin Short <robin.short@stemblocks.it>",
+	"Giulio Leoni <giulio.stemblocks@gmail.com>",
 	"Alessio Cecchin <acecchin@gmail.com>",
-	"Robin Short <robin.short@stemblocks.it>"}
+	"Avry Titouan",
+	"Marine Vincent",
+	"Matteo Bouvier",
+	"Ilyas Belhadj",
+}
 
 local core_developers = {
 	"Perttu Ahola (celeron55) <celeron55@gmail.com>",
@@ -113,12 +117,11 @@ return {
 	caption = fgettext("About"),
 	cbf_formspec = function(tabview, name, tabdata)
 		local logofile = defaulttexturedir .. "logo.png"
-		local version = core.get_version()
 		local fs = "formspec_version[6]" ..
 		    "image[0.75,0.5;2.2,2.2;" .. core.formspec_escape(logofile) .. "]" ..
 			"style[label_button;border=false]" ..
-			"button[0,2;3.5,2;label_button;" .. version.project .. " " .. version.string .. "]" ..
-			"button[0,4;3.5,1;homepage;minetest.net]" ..
+			"button[0,2;3.5,2;label_button;" .. core.formspec_escape("Matematica Superpiatta 1.3") .. "]" ..
+			"button[0,4;3.5,1;homepage;luanti.org]" ..
 
 			"tooltip[ms_site;" .. fgettext("Visita il sito") .. "]" ..
 			"button[0,2.75;3.5,2;ms_site;" .. fgettext("matematicasuperpiatta.it") .. "]" ..
@@ -126,9 +129,9 @@ return {
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
 			"table[3.5,-0.25;8.5,6.05;list_credits;" ..
-			"#FFFF00," .. fgettext("Matematica Superpiatta - client MINETEST") .. ",," ..
+			"#FFFF00," .. fgettext("Sviluppatori Matematica Superpiatta (client e server)") .. ",," ..
 			buildCreditList(matematica_superpiatta) .. ",,," ..
-			"#FFFF00," .. fgettext("Core Developers") .. ",," ..
+			"#FFFF00," .. fgettext("Luanti — Core Developers") .. ",," ..
 			buildCreditList(core_developers) .. ",,," ..
 			"#FFFF00," .. fgettext("Active Contributors") .. ",," ..
 			buildCreditList(active_contributors) .. ",,," ..
@@ -147,7 +150,7 @@ return {
 	end,
 	cbf_button_handler = function(this, fields, name, tabdata)
 		if fields.homepage then
-			core.open_url("https://www.minetest.net")
+			core.open_url("https://www.luanti.org")
 		end
 
 		if fields.ms_site then

@@ -502,10 +502,14 @@ local function get_formspec(dialogdata)
 	local extra_h = 1 -- not included in tabsize.height
 	local tabsize = {
 		width = core.settings:get_bool("touch_gui") and 16.5 or 15.5,
-		-- iOS: a bit shorter on touch so the centred dialog leaves a bottom
-		-- margin and its button row (Back, ...) clears the debug-build notice.
-		height = core.settings:get_bool("touch_gui") and (9 - extra_h) or 12,
+		height = core.settings:get_bool("touch_gui") and (10 - extra_h) or 12,
 	}
+
+	-- iOS: empty space below the button row. The dialog is centred and fit to
+	-- the screen height, so reducing its height does nothing (it just scales up
+	-- to fill). Instead we pad the bottom, which pushes the button row (Back,
+	-- ...) up off the screen edge so it clears the bottom-left debug notice.
+	local bottom_margin = core.settings:get_bool("touch_gui") and 0.8 or 0
 
 	local scrollbar_w = core.settings:get_bool("touch_gui") and 0.6 or 0.4
 
@@ -522,7 +526,7 @@ local function get_formspec(dialogdata)
 
 	local fs = {
 		"formspec_version[6]",
-		"size[", tostring(tabsize.width), ",", tostring(tabsize.height + extra_h), "]",
+		"size[", tostring(tabsize.width), ",", tostring(tabsize.height + extra_h + bottom_margin), "]",
 		core.settings:get_bool("touch_gui") and "padding[0.01,0.01]" or "",
 		"bgcolor[#0000]",
 

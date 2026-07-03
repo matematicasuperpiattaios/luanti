@@ -128,7 +128,6 @@ return {
 			"image[2.6,0.55;2.0,2.0;" .. core.formspec_escape(logofile) .. "]" ..
 			"style[label_button;border=false]" ..
 			"button[0.2,2.85;5.3,0.7;label_button;" .. core.formspec_escape("Matematica Superpiatta 1.3") .. "]" ..
-			"tooltip[ms_site;" .. ms_S("Visit the website") .. "]" ..
 			"button[0.4,3.75;4.8,0.8;ms_site;" .. core.formspec_escape("matematicasuperpiatta.it") .. "]" ..
 			"button[0.4,4.8;4.8,0.8;homepage;luanti.org]" ..
 

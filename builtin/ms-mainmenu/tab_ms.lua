@@ -57,22 +57,24 @@ local function get_formspec(tabview, name, tabdata)
 			x=9.7, y=3.16, w=2.5, h=0.48,
 			path = texturedir .. "luanti_wordmark.png"}:render() ..
 
-		-- UnivAQ block + institutional caption, bottom-left
+		-- UnivAQ block + institutional caption in the bottom band. The cube and
+		-- the Start button share the same 0.6 bottom margin as the Start
+		-- button's right margin (19 - 14.6 - 3.8), so they end at y=6.5.
 		Image:new{
-			x=0.4, y=4.0, w=2.4, h=2.4,
+			x=0.4, y=4.1, w=2.4, h=2.4,
 			path = texturedir .."univaq_block_image_small.png"}:render() ..
 
-		Label:new{x=3.0, y=4.3, label = ms_S("University of L'Aquila")}:render() ..
-		Label:new{x=3.0, y=4.8, label = ms_S("spin-off")}:render() ..
+		Label:new{x=3.0, y=4.8, label = ms_S("University of L'Aquila")}:render() ..
+		Label:new{x=3.0, y=5.3, label = ms_S("spin-off")}:render() ..
 
-		-- Start button, bottom-right (previously empty area, clear of the caption)
+		-- Start button, bottom-right, aligned to the same bottom band
 		Style:new{
 			selectors = {"btn_mp_connect"},
 			props = {"bgcolor=#00dc28", "font=bold", "alpha=false"} --orig: #00993b
 		}:render() ..
-		Button:new{x=14.6, y=4.3, w=3.8, h=2.0, name = "btn_mp_connect", label = ms_S("Start")}:render()
+		Button:new{x=14.6, y=4.5, w=3.8, h=2.0, name = "btn_mp_connect", label = ms_S("Start")}:render()
 	return fs .. StyleType:new{selectors = {"label"}, props = {"font=italic"}}:render() ..
-	Label:new{x=3.0, y=5.3, label = fgettext("www.matematicasuperpiatta.it")}:render()
+	Label:new{x=3.0, y=5.8, label = fgettext("www.matematicasuperpiatta.it")}:render()
 end
 
 --------------------------------------------------------------------------------

@@ -59,7 +59,7 @@ local function get_whoareu_formspec(tabview, _, tabdata)
 	end
 	local fs = FormspecVersion:new{version=6}:render() ..
 		Size:new{w = bkg_w, h = 4.5, fix = true}:render() ..
-		Label:new{x = 0.5, y = 1.5, label = fgettext("Username:")}:render() ..
+		Label:new{x = 0.5, y = 1.5, label = ms_S("Username:")}:render() ..
 		-- see here to edit field color
 		-- https://github.com/minetest/minetest/blob/8c7276c9d4fc8afa05f859297048c7153cc11f5b/src/client/clientlauncher.cpp#L176
 		StyleType:new{selectors = {"field"}, props = {"textcolor=#ffffff"}}:render() ..
@@ -67,15 +67,15 @@ local function get_whoareu_formspec(tabview, _, tabdata)
 		StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() .. --orig: #ff8000
 		Button:new{x=btn_abs_x, y=3.25, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 		StyleType:new{selectors = {"button"}, props = {"bgcolor=#00dc28", "alpha=false"}}:render() .. --orig: #00993b
-		Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_next", label = fgettext("Next")}:render() ..
+		Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_next", label = ms_S("Next")}:render() ..
 
 		-- Styled stuff
 		StyleType:new{selectors = {"label"}, props = {"font=italic"}}:render() ..
-		Label:new{x = 0.5, y = 2.75, label = fgettext("You need a provided account")}:render()
+		Label:new{x = 0.5, y = 2.75, label = ms_S("You need a provided account")}:render()
 
 	if error_msg ~= "" then
 		fs = fs .. StyleType:new{selectors = {"label"}, props = {"font=normal", "textcolor=red"}}:render() ..
-		Label:new{x = 0.5, y = 0.5, label = fgettext(error_msg)}:render()
+		Label:new{x = 0.5, y = 0.5, label = ms_S(error_msg)}:render()
 	end
 	return fs
 end
@@ -157,28 +157,28 @@ local function get_passwd_formspec(tabview, _, tabdata)
 		core.log("Hide password of " .. whoareu)
 		return FormspecVersion:new{version=6}:render() ..
 			Size:new{w = bkg_w, h = 4.5, fix = true}:render() ..
-			Label:new{x = 0.5, y = 0.5, label = fgettext("Welcome") .. " " .. whoareu}:render() ..
-			Label:new{x = 0.5, y = 1.5, label = fgettext("Password:")}:render() ..
+			Label:new{x = 0.5, y = 0.5, label = ms_S("Welcome") .. " " .. whoareu}:render() ..
+			Label:new{x = 0.5, y = 1.5, label = ms_S("Password:")}:render() ..
 			PasswdField:new{x = 0.5, y = 1.75, w = bkg_w - 1.0, h = 0.7, name = "passwd", value = ""}:render() ..
 			StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() ..
 			Button:new{x=btn_abs_x, y=3.25, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 
 			-- Styled stuff
 			StyleType:new{selectors = {"button"}, props = {"font=bold", "bgcolor=#00dc28", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_play", label = fgettext("Play!")}:render()
+			Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
 	else
 		core.log("Show password of " .. whoareu)
 		return FormspecVersion:new{version=6}:render() ..
 			Size:new{w = bkg_w, h = 4.5, fix = true}:render() ..
-			Label:new{x = 0.5, y = 0.5, label = fgettext("Welcome") .. " " .. whoareu}:render() ..
-			Label:new{x = 0.5, y = 1.5, label = fgettext("Password:")}:render() ..
+			Label:new{x = 0.5, y = 0.5, label = ms_S("Welcome") .. " " .. whoareu}:render() ..
+			Label:new{x = 0.5, y = 1.5, label = ms_S("Password:")}:render() ..
 			Field:new{x = 0.5, y = 1.75, w = bkg_w - 1.0, h = 0.7, name = "passwd", value = ""}:render() ..
 			StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() ..
 			Button:new{x=btn_abs_x, y=3.25, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 
 			-- Styled stuff
 			StyleType:new{selectors = {"button"}, props = {"font=bold", "bgcolor=#00dc28", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_play", label = fgettext("Play!")}:render()
+			Button:new{x=btn_abs_x + btn_w + 0.1, y=3.25, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
 	end
 end
 
@@ -274,7 +274,7 @@ local function get_flavor_formspec(tabview, _, tabdata)
 	waitingTime = math.min(60, waitingTime)
 	return FormspecVersion:new{version=6}:render() ..
 		Size:new{w = 12, h = 4.8, fix = true}:render() ..
-		Label:new{x = 0.5, y = 0.5, label = fgettext("Loading in... ") .. tostring(waitingTime) .. " " .. fgettext("seconds")}:render() ..
+		Label:new{x = 0.5, y = 0.5, label = ms_S("Loading in... ") .. tostring(waitingTime) .. " " .. ms_S("seconds")}:render() ..
 		TableColumns:new{ columns = { {"text"} } }:render() ..
 		TableOptions:new{ options =	{"background=#00000000", "highlight=#00000000"}}:render() ..
 		Table:new{ x = 0.5, y = 1, w = 11, h = 3.2, name = "news", cells = flavor}:render()

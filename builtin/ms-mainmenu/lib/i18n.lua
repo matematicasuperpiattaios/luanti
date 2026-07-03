@@ -74,6 +74,53 @@ local strings = {
 		fr = "Moteur de rendu actif :",
 		es = "Renderizador activo:",
 	},
+
+	-- Login flow (dlg_whoareu)
+	["Username:"] = {
+		it = "Nome utente:",
+		fr = "Nom d'utilisateur :",
+		es = "Nombre de usuario:",
+	},
+	["Next"] = {
+		it = "Avanti",
+		fr = "Suivant",
+		es = "Siguiente",
+	},
+	["You need a provided account"] = {
+		it = "Serve un account fornito",
+		fr = "Un compte fourni est requis",
+		es = "Se requiere una cuenta proporcionada",
+	},
+	["Login failed, try again"] = {
+		it = "Accesso fallito, riprova",
+		fr = "Échec de la connexion, réessayez",
+		es = "Error de acceso, inténtalo de nuevo",
+	},
+	["Welcome"] = {
+		it = "Benvenuto",
+		fr = "Bienvenue",
+		es = "Bienvenido",
+	},
+	["Password:"] = {
+		it = "Password:",
+		fr = "Mot de passe :",
+		es = "Contraseña:",
+	},
+	["Play!"] = {
+		it = "Gioca!",
+		fr = "Jouer !",
+		es = "¡Jugar!",
+	},
+	["Loading in... "] = {
+		it = "Caricamento tra... ",
+		fr = "Chargement dans... ",
+		es = "Cargando en... ",
+	},
+	["seconds"] = {
+		it = "secondi",
+		fr = "secondes",
+		es = "segundos",
+	},
 }
 
 -- Language gettext resolved for this session (e.g. "it"); "" -> English.

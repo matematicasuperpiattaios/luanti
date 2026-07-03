@@ -4,6 +4,9 @@
 // Copyright (C) 2017 nerzhul, Loic Blot <loic.blot@unix-experience.fr>
 
 #include <optional>
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 #include <irrlicht.h>
 #include "IMeshCache.h"
 #include "fontengine.h"
@@ -163,7 +166,11 @@ RenderingEngine::RenderingEngine(MyEventReceiver *receiver)
 
 	// Resolution selection
 	bool fullscreen = g_settings->getBool("fullscreen");
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IPHONE)
+	// iOS/Android are always native fullscreen. Ignore any saved screen_w/h:
+	// autosave_screensize persists the drawable *pixel* size, and feeding that
+	// back as the window size on iOS collapses the retina window scale
+	// (ScaleX = drawable/window -> 1.0), which shrinks all text after a restart.
 	u16 screen_w = 0, screen_h = 0;
 	bool window_maximized = false;
 #else

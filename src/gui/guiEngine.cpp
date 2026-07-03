@@ -22,6 +22,9 @@
 #include "porting.h"
 #include "scripting_mainmenu.h"
 #include "settings.h"
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 #include <ICameraSceneNode.h>
 #include <IGUIStaticText.h>
 #include "client/imagefilters.h"
@@ -681,11 +684,17 @@ void GUIEngine::updateTopLeftTextSize()
 {
 	const auto &str = m_toplefttext.getString();
 	u32 lines = std::count(str.begin(), str.end(), L'\n') + 1;
-	core::rect<s32> rect(0, 0,
-		g_fontengine->getTextWidth(str.c_str()),
-		g_fontengine->getTextHeight() * lines
-	);
+	s32 text_w = g_fontengine->getTextWidth(str.c_str());
+	s32 text_h = g_fontengine->getTextHeight() * lines;
+	core::rect<s32> rect(0, 0, text_w, text_h);
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+	// iOS: anchor the notice at the bottom-left so it stays visible without
+	// covering the menu (desktop keeps it at the top-left as usual).
+	v2u32 screensize = m_rendering_engine->get_video_driver()->getScreenSize();
+	rect += v2s32(4, (s32)screensize.Y - text_h - 4);
+#else
 	rect += v2s32(4, 4);
+#endif
 
 	m_irr_toplefttext->remove();
 	m_irr_toplefttext = gui::StaticText::add(m_rendering_engine->get_gui_env(),

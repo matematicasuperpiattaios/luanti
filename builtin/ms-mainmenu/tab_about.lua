@@ -129,15 +129,17 @@ return {
 			"tablecolumns[color;text]" ..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]" ..
 			"table[3.5,-0.25;8.5,6.05;list_credits;" ..
+			"," .. fgettext("Matematica Superpiatta è un fork open source di Luanti.") .. ",," ..
+			fgettext("Codice sorgente: https://github.com/matematicasuperpiattaios/luanti") .. ",,," ..
 			"#FFFF00," .. fgettext("Sviluppatori Matematica Superpiatta (client e server)") .. ",," ..
 			buildCreditList(matematica_superpiatta) .. ",,," ..
 			"#FFFF00," .. fgettext("Luanti — Core Developers") .. ",," ..
 			buildCreditList(core_developers) .. ",,," ..
-			"#FFFF00," .. fgettext("Active Contributors") .. ",," ..
+			"#FFFF00," .. fgettext("Luanti — Active Contributors") .. ",," ..
 			buildCreditList(active_contributors) .. ",,," ..
-			"#FFFF00," .. fgettext("Previous Core Developers") ..",," ..
+			"#FFFF00," .. fgettext("Luanti — Previous Core Developers") ..",," ..
 			buildCreditList(previous_core_developers) .. ",,," ..
-			"#FFFF00," .. fgettext("Previous Contributors") .. ",," ..
+			"#FFFF00," .. fgettext("Luanti — Previous Contributors") .. ",," ..
 			buildCreditList(previous_contributors) .. "," ..
 			";1]"
 

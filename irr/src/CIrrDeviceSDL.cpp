@@ -444,6 +444,13 @@ CIrrDeviceSDL::CIrrDeviceSDL(const SIrrlichtCreationParameters &param) :
 		// Minetest has its own signal handler
 		SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
 
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+		// iOS: the iPhone soft keyboard has no dismiss button, so let its
+		// Return key hide it. Without this the keyboard can cover the dialog
+		// buttons with no way to close it.
+		SDL_SetHint(SDL_HINT_RETURN_KEY_HIDES_IME, "1");
+#endif
+
 		// Disabling the compositor is not a good idea in windowed mode.
 		// see <https://github.com/luanti-org/luanti/issues/14596>
 		SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");

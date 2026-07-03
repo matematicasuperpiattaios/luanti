@@ -34,11 +34,21 @@ local function get_formspec(tabview, name, tabdata)
 		tabdata.search_for = ""
 	end
 
+	-- Localized MS logo. Fixed height; width follows each artwork's aspect
+	-- ratio so it isn't distorted, then centred horizontally in the 19-wide tab.
+	local logos = {
+		it = {file = "logo_320x132.png", w = 7.68},
+		en = {file = "logo_en.png",      w = 7.45},
+		fr = {file = "logo_fr.png",      w = 9.17},
+		es = {file = "logo_es.png",      w = 8.92},
+	}
+	local logo = logos[ms_current_lang()] or logos.en
+
 	local fs = FormspecVersion:new{version=6}:render() ..
-	    -- Title logo, centred horizontally in the 19-wide tab
+	    -- Title logo (localized), centred horizontally in the 19-wide tab
 		Image:new{
-			x=5.66, y=0.15, w=7.68, h=3.17,
-			path = texturedir .. "logo_320x132.png"}:render() ..
+			x=(19 - logo.w) / 2, y=0.15, w=logo.w, h=3.17,
+			path = texturedir .. logo.file}:render() ..
 
 		-- Attribution: "based on" (localized) + Luanti wordmark image,
 		-- tucked right under the MS logo (grouped with it, not the caption below)

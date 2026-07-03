@@ -124,7 +124,7 @@ local strings = {
 }
 
 -- Language gettext resolved for this session (e.g. "it"); "" -> English.
-local function ms_current_lang()
+function ms_current_lang()
 	local _, code = core.get_language()
 	if not code or code == "" then
 		return "en"

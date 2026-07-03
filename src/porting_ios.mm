@@ -5,6 +5,7 @@
 #include "porting_ios.h"
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 namespace porting
 {
@@ -34,6 +35,23 @@ std::string getAppleCacheDirectory()
             error:nil];
 
         return std::string([[url path] UTF8String]);
+    }
+}
+
+bool openURLApple(const std::string &url) {
+    @autoreleasepool {
+        NSString *urlStr = [NSString stringWithUTF8String:url.c_str()];
+        NSURL *nsurl = urlStr ? [NSURL URLWithString:urlStr] : nil;
+        if (nsurl == nil)
+            return false;
+
+        // -openURL: must run on the main thread; dispatch there unconditionally.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] openURL:nsurl
+                                               options:@{}
+                                     completionHandler:nil];
+        });
+        return true;
     }
 }
 

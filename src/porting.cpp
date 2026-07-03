@@ -957,6 +957,9 @@ static bool open_uri(const std::string &uri)
 #elif defined(__ANDROID__)
 	openURIAndroid(uri.c_str());
 	return true;
+#elif defined(__APPLE__) && TARGET_OS_IPHONE
+	// iOS has no `open` binary; open the URL through UIApplication instead.
+	return openURLApple(uri);
 #elif defined(__APPLE__)
 	const char *argv[] = {"open", uri.c_str(), NULL};
 	return posix_spawnp(NULL, "open", NULL, NULL, (char**)argv,

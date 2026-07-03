@@ -738,7 +738,7 @@ if(BUILD_CLIENT)
 		# on other platforms, only IrrlichtMt depends on SDL2
 		"$<$<PLATFORM_ID:Android>:${SDL2_LIBRARIES}>"
 		"$<$<PLATFORM_ID:iOS>:-framework Security -framework CoreHaptics -framework CoreBluetooth>"
-		"$<$<PLATFORM_ID:iOS>:-framework GameController -framework Metal -framework Foundation>"
+		"$<$<PLATFORM_ID:iOS>:-framework GameController -framework Metal -framework Foundation -framework UIKit>"
 		"$<$<PLATFORM_ID:iOS>:${OPENGLES2_LIBRARY}>"
 	)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE "MT_BUILDTARGET=1")

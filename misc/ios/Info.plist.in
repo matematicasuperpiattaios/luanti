@@ -28,6 +28,13 @@
 	<false/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Full-screen rendering on all devices. Without a launch screen iOS
+	     treats the app as legacy and letterboxes it (black bars on the sides
+	     in landscape on notch/Dynamic-Island iPhones). An empty UILaunchScreen
+	     dict opts into native full-resolution rendering with no per-device
+	     assets, so it scales elastically across every iPhone/iPad. -->
+	<key>UILaunchScreen</key>
+	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

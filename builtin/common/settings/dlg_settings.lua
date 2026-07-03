@@ -502,7 +502,9 @@ local function get_formspec(dialogdata)
 	local extra_h = 1 -- not included in tabsize.height
 	local tabsize = {
 		width = core.settings:get_bool("touch_gui") and 16.5 or 15.5,
-		height = core.settings:get_bool("touch_gui") and (10 - extra_h) or 12,
+		-- iOS: a bit shorter on touch so the centred dialog leaves a bottom
+		-- margin and its button row (Back, ...) clears the debug-build notice.
+		height = core.settings:get_bool("touch_gui") and (9 - extra_h) or 12,
 	}
 
 	local scrollbar_w = core.settings:get_bool("touch_gui") and 0.6 or 0.4

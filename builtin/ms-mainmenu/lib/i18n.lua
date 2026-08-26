@@ -27,6 +27,11 @@ local strings = {
 		fr = "Démarrer",
 		es = "Iniciar",
 	},
+	["Exit"] = {
+		it = "Esci",
+		fr = "Quitter",
+		es = "Salir",
+	},
 
 	-- About tab
 	["Matematica Superpiatta is an open-source fork of Luanti."] = {

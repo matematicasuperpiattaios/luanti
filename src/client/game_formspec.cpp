@@ -13,6 +13,9 @@
 #include "clientmap.h"
 #include "gui/guiFormSpecMenu.h"
 #include "gui/mainmenumanager.h"
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 #include "gui/touchcontrols.h"
 #include "gui/touchscreeneditor.h"
 #include "gui/guiPasswordChange.h"
@@ -103,7 +106,11 @@ struct HardcodedPauseFormspecHandler : public TextDest
 
 		if (fields.find("btn_exit_os") != fields.end()) {
 			g_gamecallback->exitToOS();
-#ifndef __ANDROID__
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+			// iOS keeps the process alive after closeDevice() (leaving a black
+			// screen), so actually terminate the app.
+			exit(0);
+#elif !defined(__ANDROID__)
 			RenderingEngine::get_raw_device()->closeDevice();
 #endif
 			return;

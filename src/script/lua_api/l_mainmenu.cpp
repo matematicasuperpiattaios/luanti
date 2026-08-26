@@ -4,6 +4,9 @@
 
 #include "lua_api/l_mainmenu.h"
 #include "lua_api/l_internal.h"
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
 #include "common/c_content.h"
 #include "config.h"
 #include "scripting_mainmenu.h"
@@ -160,6 +163,11 @@ int ModApiMainMenu::l_close(lua_State *L)
 	sanity_check(engine != NULL);
 
 	engine->m_kill = true;
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+	// iOS won't terminate when the run loop ends (it just goes black), so quit
+	// the process explicitly. This is what makes the main-menu Exit button work.
+	exit(0);
+#endif
 	return 0;
 }
 

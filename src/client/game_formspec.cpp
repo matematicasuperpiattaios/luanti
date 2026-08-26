@@ -391,10 +391,7 @@ void GameFormSpec::showPauseMenu()
 		os << "field[4.95,0;5,1.5;;" << strgettext("Game paused") << ";]";
 	}
 
-	os	<< "button[4," << (ypos++) << ";3,0.5;btn_settings;"
-		// TRANSLATORS: Try to keep the translation short
-		<< strgettext("Settings") << "]";
-
+	// MS: no Settings button in the pause menu (kept minimal for classroom use).
 	// MS: no Sound Volume button — volume is controlled by the device's
 	// hardware buttons on iOS.
 

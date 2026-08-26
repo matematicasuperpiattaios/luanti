@@ -22,6 +22,7 @@ local matematica_superpiatta = {
 	"Leonardo Guidoni <leonardo.guidoni@stemblocks.it>",
 	"Robin Short <robin.short@stemblocks.it>",
 	"Giulio Leoni <giulio.stemblocks@gmail.com>",
+	"Davide Modenese <modenesedavide@gmail.com>",
 	"Alessio Cecchin <acecchin@gmail.com>",
 	"Avry Titouan",
 	"Marine Vincent",

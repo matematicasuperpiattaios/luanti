@@ -265,6 +265,12 @@ core::recti ButtonLayout::getRect(touch_gui_button_id btn,
 	v2u32 orig_size = getTexture(btn, tsrc)->getOriginalSize();
 	v2s32 size((button_size * orig_size.X) / orig_size.Y, button_size);
 
+	// MS: the jump/sneak arrow textures are wider than tall, which made those
+	// buttons wider than the other (square) touch buttons. Keep them square so
+	// they match the inventory/menu button width.
+	if (btn == jump_id || btn == sneak_id)
+		size.X = button_size;
+
 	return core::recti(pos - size / 2, core::dimension2di(size));
 }
 

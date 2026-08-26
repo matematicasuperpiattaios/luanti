@@ -172,6 +172,23 @@ backend), `api` (release/dev), `os` (`ios`), `dev_phase` (release/beta),
 `server_type` (ecs/multi/local), `debug`. La versione del **motore** (CMake
 `VERSION_*`, 5.16.0) **non** viene toccata: è indipendente dalla versione app MS.
 
+## Personalizzazioni UI touch (e come ripristinarle)
+
+Per l'uso in classe l'interfaccia touch è stata semplificata. Per riabilitare le
+voci rimosse:
+
+- **Menu overflow (⊞): solo "Cambia vista" e "Uscita".** Gli altri pulsanti
+  (chat, inventario, drop, vola, veloce, noclip, debug, minimappa, ecc.) sono
+  nascosti dal menu overflow in `src/gui/touchcontrols.cpp` (nel filtro
+  `overflow_buttons.erase(...)`, il check `id != camera_id && id != exit_id`).
+  Rimuovere quel check ripristina il menu completo.
+- **Menu di pausa: niente pulsante "Settings".** Rimosso in
+  `src/client/game_formspec.cpp` (blocco `btn_settings`, commentato con `MS:`).
+  Reinserirlo per riavere l'accesso alle impostazioni in gioco.
+- **Joystick** (posizione/dimensione) e **layout dei pulsanti**: rispettivamente
+  in `src/gui/touchcontrols.cpp` (rect del `joystick_off_id`) e nel
+  `touch_layout` di `misc/ios/minetest.conf`.
+
 ## Sincronizzare il fork con sfence/luanti
 
 GitHub considera il fork "sincronizzato" guardando solo `master`. `sfence_ios` viene invece riscritto regolarmente da sfence (rebase/force-push), quindi serve un sync esplicito:

@@ -289,10 +289,12 @@ void TouchControls::applyLayout(const ButtonLayout &layout)
 						m_button_size * 4,
 						m_screensize.Y - m_button_size), true));
 	} else {
+		// MS: dynamic joystick resting hint — a bit smaller (1.7x button size)
+		// and closer to the left edge than the default (2x, 1 button margin).
 		m_joystick_btn_off = grab_gui_element<IGUIImage>(makeButtonDirect(joystick_off_id,
-				recti(m_button_size,
-						m_screensize.Y - m_button_size * 3,
-						m_button_size * 3,
+				recti(m_button_size * 2 / 5,
+						m_screensize.Y - m_button_size * 27 / 10,
+						m_button_size * 21 / 10,
 						m_screensize.Y - m_button_size), true));
 	}
 
@@ -331,6 +333,11 @@ void TouchControls::applyLayout(const ButtonLayout &layout)
 	overflow_buttons.erase(std::remove_if(
 			overflow_buttons.begin(), overflow_buttons.end(),
 			[&](touch_gui_button_id id) {
+				// MS: keep the touch overflow menu minimal for classroom use —
+				// only "camera" (change view) and "exit". To restore the full
+				// menu, remove this first check (see README).
+				if (id != camera_id && id != exit_id)
+					return true;
 				// There would be no sense in adding the overflow button to the
 				// overflow menu.
 				return !mayAddButton(id) || id == overflow_id;

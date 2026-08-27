@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	Privacy manifest for Matematica Superpiatta (iOS).
+
+	Declares the "required reason" APIs actually linked into the binary
+	(engine + static deps), audited with `nm -u` on the built product:
+	  - stat / fstat            -> NSPrivacyAccessedAPICategoryFileTimestamp
+	  - mach_absolute_time      -> NSPrivacyAccessedAPICategorySystemBootTime
+	Disk-space (statfs/statvfs/getattrlist), user-defaults (NSUserDefaults)
+	and active-keyboard (UITextInputMode) APIs are NOT referenced, so they
+	are intentionally not declared. `sysctl` is present but only for
+	hw.memsize / CPU-feature queries, which are not required-reason APIs.
+
+	The app does no tracking. The only user data it handles is the login
+	username (sent to the WISCOMS auth backend), declared below as a User ID
+	collected for App Functionality only. Keep this consistent with the
+	App Store Connect "App Privacy" answers.
+-->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeUserID</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<true/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<!-- C617.1: timestamps/size/metadata of files inside the app container
+				     (world saves, media cache, mods, config). -->
+				<string>C617.1</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<!-- 35F9.1: measure elapsed time between in-app events (the SDL /
+				     engine high-resolution frame timer); not sent off device. -->
+				<string>35F9.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

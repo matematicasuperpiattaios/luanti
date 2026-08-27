@@ -12,8 +12,8 @@
 # - The device-only checks (arm64, no simulator slice, signed entitlements)
 #   are meaningful on a Release device build / archive; on a simulator .app
 #   they will (correctly) fail — that is not a release artifact.
-# - PrivacyInfo.xcprivacy is required (STEP 3). Until that step lands, the
-#   privacy-manifest check will fail; that is expected.
+# - PrivacyInfo.xcprivacy is required (STEP 3, done): shipped from
+#   misc/ios/PrivacyInfo.xcprivacy to the .app root by install_resources.cmake.
 
 set -u
 

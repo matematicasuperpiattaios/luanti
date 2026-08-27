@@ -82,3 +82,14 @@ if(EXISTS "$ENV{SOURCE_ROOT}/misc/ios/minetest.conf")
 		"${RESOURCES_DIR}/minetest.conf"
 	)
 endif()
+
+# Ship the privacy manifest at the bundle root (App Store requires
+# PrivacyInfo.xcprivacy there; otherwise ITMS-91053 on upload). On iOS
+# RESOURCES_DIR is the .app root, so this lands at the correct level.
+if(EXISTS "$ENV{SOURCE_ROOT}/misc/ios/PrivacyInfo.xcprivacy")
+	execute_process(
+		COMMAND ${CMAKE_COMMAND} -E copy
+		"$ENV{SOURCE_ROOT}/misc/ios/PrivacyInfo.xcprivacy"
+		"${RESOURCES_DIR}/PrivacyInfo.xcprivacy"
+	)
+endif()

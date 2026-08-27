@@ -149,3 +149,8 @@ client/mod_storage.sqlite
 /ios*_deps.tar.gz
 
 docs_ms/
+
+# App Store screenshot captures (STEP 9)
+appstore-screenshots/
+build-appstore/
+tools/ios/.last-build-number

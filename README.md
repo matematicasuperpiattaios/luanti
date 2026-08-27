@@ -44,8 +44,15 @@ Portato e funzionante end-to-end (login → discovery → mondo su server MS rea
 - Indirizzo del server remoto mostrato nel pause menu.
 - `configure_ms_release.py` per la config di release iOS (vedi sotto).
 
-Aperto/da rifinire: layout formspec del menu, icona hi-res nativa, modalità di
-avvio PANEL/CMD (deep link), test estesi su device fisico.
+Aperto/da rifinire: modalità di avvio PANEL/CMD (deep link), test estesi su
+device fisico.
+
+Icona app: `misc/ios/Assets.xcassets/AppIcon.appiconset` usa un singolo
+`icon-1024.png` **1024×1024 senza canale alfa** con `idiom: universal` — il
+formato consigliato da iOS 14+/Xcode: l'asset catalog genera automaticamente
+tutte le taglie in `Assets.car`. (Verificabile con `tools/ios/preflight-appstore.sh`.)
+Se il 1024 fosse un upscale da un sorgente più piccolo, sostituirlo con un
+render nativo alla stessa risoluzione.
 
 ## Branch
 

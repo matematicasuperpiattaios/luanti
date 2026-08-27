@@ -155,3 +155,6 @@ appstore-screenshots/
 build-appstore/
 tools/ios/.last-build-number
 tools/ios/.developer-team
+iphone_screenshots/
+ipad_screenshots/
+ipad_full_screenshots/

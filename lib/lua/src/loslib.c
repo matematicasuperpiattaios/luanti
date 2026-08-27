@@ -11,6 +11,10 @@
 #include <string.h>
 #include <time.h>
 
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+
 #define loslib_c
 #define LUA_LIB
 
@@ -36,7 +40,15 @@ static int os_pushresult (lua_State *L, int i, const char *filename) {
 
 
 static int os_execute (lua_State *L) {
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+  /* system() is unavailable on iOS (and os.execute is removed by Minetest's
+     Lua sandbox anyway). Mirror the "no shell" convention: with no argument
+     report that no command processor is available; with an argument fail. */
+  const char *cmd = luaL_optstring(L, 1, NULL);
+  lua_pushinteger(L, cmd == NULL ? 0 : -1);
+#else
   lua_pushinteger(L, system(luaL_optstring(L, 1, NULL)));
+#endif
   return 1;
 }
 

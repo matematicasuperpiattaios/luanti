@@ -9,7 +9,16 @@ set(COMMON_CFLAGS)
 set(COMMON_LDFLAGS)
 set(LIBS)
 
-if(APPLE)
+if(APPLE AND CMAKE_SYSTEM_NAME STREQUAL "iOS")
+	# iOS has no system()/popen() and no NSModule dyld loader. LUA_USE_MACOSX
+	# would select the ancient DYLD backend (unavailable on iOS) and
+	# LUA_USE_POSIX would pull in popen(); both fail to compile against the
+	# iOS SDK. Build bundled Lua in plain-ANSI mode instead: dynamic C module
+	# loading, io.popen and os.execute are unavailable anyway (Minetest's Lua
+	# sandbox removes them), and the ANSI fallbacks compile cleanly.
+	set(DEFAULT_POSIX FALSE)
+	set(DEFAULT_DLOPEN OFF)
+elseif(APPLE)
 	set(DEFAULT_POSIX TRUE)
 	set(DEFAULT_DLOPEN OFF)
 	set(COMMON_CFLAGS "${COMMON_CFLAGS} -DLUA_USE_MACOSX")

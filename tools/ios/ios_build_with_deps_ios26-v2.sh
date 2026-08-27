@@ -124,6 +124,21 @@ if [[ "$step" == *"all"* ]] || [[ "$step" == *"build"* ]] || [[ "$step" == *"lua
 	sdkroot="$(realpath "$sdk_path")"
 	export CMAKE_PREFIX_PATH=$DEPS_DIR/install
 	export SDKROOT="$sdkroot"
+
+	# Lua engine selection. Default: LuaJIT (fastest interpreter). For an
+	# App Store RELEASE build set MS_LUA=vanilla to link the bundled Lua 5.1
+	# (lib/lua) instead: it contains no runtime code-generation path at all,
+	# which is the unambiguously safe choice for App Store guideline 2.5.2
+	# (LuaJIT ships the JIT compiler even though iOS can't run it).
+	#   MS_LUA=vanilla ./tools/ios/build-ios.sh
+	if [ "${MS_LUA:-luajit}" = "vanilla" ]; then
+		echo "  Lua engine: bundled Lua 5.1 (ENABLE_LUAJIT=0)"
+		LUA_CMAKE_FLAGS="-DENABLE_LUAJIT=0"
+	else
+		echo "  Lua engine: LuaJIT"
+		LUA_CMAKE_FLAGS="-DLUA_LIBRARY=${DEPS_INSTALL_DIR}/lib/libluajit-5.1.a -DLUA_INCLUDE_DIR=${DEPS_INSTALL_DIR}/include/luajit-2.1"
+	fi
+
 	echo "GENERATION XCODE PROJECT..."
 					#-DSDL2_LIBRARIES="${DEPS_INSTALL_DIR}/lib/libSDL2.a;${DEPS_INSTALL_DIR}/lib/libSDL2main.a" \
 	cmake .. -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=$osver -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_OSX_ARCHITECTURES=arm64 \
@@ -142,8 +157,7 @@ if [[ "$step" == *"all"* ]] || [[ "$step" == *"build"* ]] || [[ "$step" == *"lua
 					-DFREETYPE_INCLUDE_DIRS=${DEPS_INSTALL_DIR}/include/freetype2 \
 					-DGETTEXT_INCLUDE_DIR=${DEPS_INSTALL_DIR}/include \
 					-DGETTEXT_LIBRARY=${DEPS_INSTALL_DIR}/lib/libintl.a \
-					-DLUA_LIBRARY=${DEPS_INSTALL_DIR}/lib/libluajit-5.1.a \
-					-DLUA_INCLUDE_DIR=${DEPS_INSTALL_DIR}/include/luajit-2.1 \
+					${LUA_CMAKE_FLAGS} \
 					-DOGG_LIBRARY=${DEPS_INSTALL_DIR}/lib/libogg.a \
 					-DOGG_INCLUDE_DIR=${DEPS_INSTALL_DIR}/include \
 					-DVORBIS_LIBRARY=${DEPS_INSTALL_DIR}/lib/libvorbis.a \

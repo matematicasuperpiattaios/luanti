@@ -107,6 +107,29 @@ open build-ios-device/luanti.xcodeproj      # device (richiede team di signing)
   poi ricompila in Xcode. (In alternativa rigenera da zero con `build-ios.sh`
   dopo aver rimosso le build dir.)
 
+### Motore Lua: LuaJIT (default) vs Lua 5.1 vanilla (release App Store)
+
+Di default la build linka **LuaJIT** (`libluajit-5.1.a`, interprete più veloce).
+Per la **release su App Store** conviene invece linkare il **Lua 5.1 vanilla**
+bundled (`lib/lua/`), tramite la variabile d'ambiente `MS_LUA`:
+
+```bash
+MS_LUA=vanilla ./tools/ios/build-ios.sh
+```
+
+Perché per la release: la linea guida App Store **2.5.2** vieta la generazione
+di codice eseguibile a runtime. LuaJIT spedisce il compilatore JIT anche se su
+iOS non può girare (nessun entitlement `allow-jit`, cfr. preflight STEP 4):
+la macchina di codegen resta linkata e *tenta* `mmap(PROT_EXEC)`. Il Lua vanilla
+non ha alcun percorso di codegen → conforme senza ambiguità.
+
+Costo: su un workload rappresentativo (formspec del menu, string/table/math)
+LuaJIT-interprete è ~2× più veloce del vanilla, ma il Lua qui è colla (non
+l'hot path: rendering/mesh/rete sono in C++), quindi in gioco la differenza è
+impercettibile. **Raccomandazione: `MS_LUA=vanilla` per la build di release**,
+LuaJIT per lo sviluppo (iterazione più rapida). Il gioco è identico: Luanti
+supporta ufficialmente entrambi i motori.
+
 ### Fallback: ricompilare le deps da zero
 
 Se il pacchetto non è raggiungibile e hai Homebrew funzionante, prima installa i tool:

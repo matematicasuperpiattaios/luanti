@@ -24,6 +24,10 @@
 	<string>1.3</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.games</string>
+	<!-- Export compliance: the app only uses standard HTTPS (via cURL), which is
+	     exempt encryption, so App Store Connect won't ask per upload. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSHighResolutionCapable</key>
 	<false/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

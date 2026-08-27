@@ -57,12 +57,6 @@ local function get_formspec(tabview, name, tabdata)
 			x=9.7, y=3.16, w=2.5, h=0.48,
 			path = texturedir .. "luanti_wordmark.png"}:render() ..
 
-		-- Exit button (quits the app; iOS terminates the process via core.close)
-		Style:new{selectors = {"btn_ms_exit"},
-			props = {"bgcolor=#c0392b", "alpha=false"}}:render() ..
-		Button:new{x=0.3, y=0.1, w=2.2, h=0.7, name = "btn_ms_exit",
-			label = ms_S("Exit")}:render() ..
-
 		-- UnivAQ block + institutional caption in the bottom band. The cube and
 		-- the Start button share the same 0.6 bottom margin as the Start
 		-- button's right margin (19 - 14.6 - 3.8), so they end at y=6.5.
@@ -89,11 +83,6 @@ local function main_button_handler(tabview, fields, name, tabdata)
 	if fields.key_enter then
 		fields.btn_mp_update = handshake.roadmap.client_update.required
 		fields.btn_mp_connect = not fields.btn_mp_update
-	end
-
-	if fields.btn_ms_exit then
-		core.close()
-		return true
 	end
 
 	if fields.btn_mp_debug then

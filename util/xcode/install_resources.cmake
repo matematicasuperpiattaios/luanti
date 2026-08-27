@@ -2,8 +2,16 @@
 # This is only one working solution I found to be working for normal and Archive builds under Xcode 15.4
 # I expect higger sensitivity to Xcode version.
 
+# Resolve the bundle's resources directory. UNLOCALIZED_RESOURCES_FOLDER_PATH is
+# platform-aware (on iOS it is the flat "<app>.app"; on macOS it is
+# "<app>.app/Contents/Resources"), so use it in BOTH cases. During an archive
+# Xcode sets INSTALL_ROOT and installs to INSTALL_PATH ("/Applications"); a
+# regular build has neither, so we fall back to TARGET_BUILD_DIR.
+# (The old archive branch hardcoded ".app/Contents/Resources", which on iOS
+# created a bogus Contents/ folder at the flat bundle root -> codesign failed
+# with "unsealed contents present in the bundle root".)
 if(DEFINED ENV{INSTALL_ROOT} AND EXISTS "$ENV{INSTALL_ROOT}")
-	set(RESOURCES_DIR "$ENV{INSTALL_ROOT}/Applications/$ENV{PRODUCT_NAME}.app/Contents/Resources")
+	set(RESOURCES_DIR "$ENV{INSTALL_ROOT}$ENV{INSTALL_PATH}/$ENV{UNLOCALIZED_RESOURCES_FOLDER_PATH}")
 else()
 	set(RESOURCES_DIR "$ENV{TARGET_BUILD_DIR}/$ENV{UNLOCALIZED_RESOURCES_FOLDER_PATH}")
 endif()

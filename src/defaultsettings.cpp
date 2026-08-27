@@ -412,6 +412,12 @@ void set_default_settings()
 	settings->setDefault("font_size", font_size_str);
 	settings->setDefault("mono_font_size", font_size_str);
 	settings->setDefault("chat_font_size", "0"); // Default "font_size"
+	// MS: master switch to disable in-game chat entirely on the client
+	// (no way to open the chat/command console, no chat buttons in the touch
+	// UI). Used by the iOS build (children's product; avoids App Store social
+	// requirements). Set to false in misc/ios/minetest.conf; default true
+	// keeps upstream behaviour on every other platform.
+	settings->setDefault("enable_client_chat", "true");
 
 	// ContentDB
 	settings->setDefault("contentdb_url", "https://content.luanti.org");

@@ -1595,6 +1595,12 @@ void Game::openConsole(float scale, const wchar_t *line)
 {
 	assert(scale > 0.0f && scale <= 1.0f);
 
+	// MS: single choke point for opening the chat/command console. When chat
+	// is disabled (iOS build) there is no way to open it or send messages,
+	// from the keyboard or the touch chat button (both route here).
+	if (!g_settings->getBool("enable_client_chat"))
+		return;
+
 #ifdef __ANDROID__
 	if (!porting::hasPhysicalKeyboardAndroid()) {
 		porting::showTextInputDialog("", "", 2);

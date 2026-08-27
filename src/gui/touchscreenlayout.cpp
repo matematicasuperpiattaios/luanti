@@ -153,6 +153,9 @@ bool ButtonLayout::isButtonAllowed(touch_gui_button_id id)
 		return g_settings->get("touch_interaction_style") == buttons_crosshair;
 	if (id == aux1_id)
 		return !g_settings->getBool("virtual_joystick_triggers_aux1");
+	// MS: hide the chat buttons when in-game chat is disabled (iOS build).
+	if (id == chat_id || id == toggle_chat_id)
+		return g_settings->getBool("enable_client_chat");
 	return true;
 }
 

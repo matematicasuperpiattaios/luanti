@@ -44,7 +44,14 @@ DEPS_DEV="$REPO_ROOT/luanti_ios_deps/ios18.2_deps/iPhoneOS"
 die() { echo "error: $*" >&2; exit 1; }
 step() { printf '\n=== %s ===\n' "$1"; }
 
-: "${DEVELOPMENT_TEAM:?set DEVELOPMENT_TEAM to your 10-char Apple Developer Team ID}"
+# Team ID: from the environment, or a git-ignored local file (so it never
+# lands in this open-source repo). Create it once with:
+#   echo YOURTEAMID > tools/ios/.developer-team
+TEAM_FILE="$REPO_ROOT/tools/ios/.developer-team"
+if [ -z "${DEVELOPMENT_TEAM:-}" ] && [ -f "$TEAM_FILE" ]; then
+	DEVELOPMENT_TEAM="$(tr -d '[:space:]' < "$TEAM_FILE")"
+fi
+: "${DEVELOPMENT_TEAM:?set DEVELOPMENT_TEAM (or put it in tools/ios/.developer-team, git-ignored)}"
 [ -d "$DEPS_DEV/lib" ] || die "precompiled device deps missing at $DEPS_DEV (see README)"
 
 # --- build number (monotonic) -------------------------------------------------

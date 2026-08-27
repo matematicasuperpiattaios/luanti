@@ -154,3 +154,4 @@ docs_ms/
 appstore-screenshots/
 build-appstore/
 tools/ios/.last-build-number
+tools/ios/.developer-team

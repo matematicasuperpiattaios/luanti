@@ -49,12 +49,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<!-- HTTPS to public hosts (WISCOMS/Lambda) works under default ATS.
-	     NSAllowsLocalNetworking permits the http:// _local demo fallbacks. -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
+	<!-- No NSAppTransportSecurity exceptions: all shipped endpoints (discovery
+	     Lambda, WISCOMS) are HTTPS and work under default ATS. The dev-only
+	     http:// _local fallbacks are not shipped, so no local-networking
+	     permission is needed (avoids the iOS Local Network prompt in review). -->
 </dict>
 </plist>

@@ -34,6 +34,7 @@ static const char *settings[] = {
 	"mono_font_path_bold_italic",
 	"fallback_font_path",
 	"dpi_change_notifier", "display_density_factor", "gui_scaling",
+	"font_size_clamp",
 };
 
 FontEngine::FontEngine(gui::IGUIEnvironment* env) :

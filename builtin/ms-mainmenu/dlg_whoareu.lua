@@ -68,9 +68,9 @@ local function get_whoareu_formspec(tabview, _, tabdata)
 		StyleType:new{selectors = {"field"}, props = {"textcolor=#ffffff"}}:render() ..
 		Field:new{x = 0.5, y = 1.05, w = bkg_w - 1.0, h = 0.7, name = "username", value = whoareu}:render() ..
 		StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() .. --orig: #ff8000
-		Button:new{x=btn_abs_x, y=2.6, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
+		Button:new{x=btn_abs_x, y=5.0, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 		StyleType:new{selectors = {"button"}, props = {"bgcolor=#00dc28", "alpha=false"}}:render() .. --orig: #00993b
-		Button:new{x=btn_abs_x + btn_w + 0.1, y=2.6, w=btn_w, h=0.75, name = "btn_next", label = ms_S("Next")}:render() ..
+		Button:new{x=btn_abs_x + btn_w + 0.1, y=5.0, w=btn_w, h=0.75, name = "btn_next", label = ms_S("Next")}:render() ..
 
 		-- Styled stuff
 		StyleType:new{selectors = {"label"}, props = {"font=italic"}}:render() ..
@@ -164,11 +164,11 @@ local function get_passwd_formspec(tabview, _, tabdata)
 			Label:new{x = 0.5, y = 1.05, label = ms_S("Password:")}:render() ..
 			PasswdField:new{x = 0.5, y = 1.4, w = bkg_w - 1.0, h = 0.7, name = "passwd", value = ""}:render() ..
 			StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x, y=2.6, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
+			Button:new{x=btn_abs_x, y=5.0, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 
 			-- Styled stuff
 			StyleType:new{selectors = {"button"}, props = {"font=bold", "bgcolor=#00dc28", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x + btn_w + 0.1, y=2.6, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
+			Button:new{x=btn_abs_x + btn_w + 0.1, y=5.0, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
 	else
 		core.log("Show password of " .. whoareu)
 		return FormspecVersion:new{version=6}:render() ..
@@ -177,11 +177,11 @@ local function get_passwd_formspec(tabview, _, tabdata)
 			Label:new{x = 0.5, y = 1.05, label = ms_S("Password:")}:render() ..
 			Field:new{x = 0.5, y = 1.4, w = bkg_w - 1.0, h = 0.7, name = "passwd", value = ""}:render() ..
 			StyleType:new{selectors = {"button"}, props = {"bgcolor=#ffa900", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x, y=2.6, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
+			Button:new{x=btn_abs_x, y=5.0, w=btn_w, h=0.75, name = "btn_back", label = fgettext("Back")}:render() ..
 
 			-- Styled stuff
 			StyleType:new{selectors = {"button"}, props = {"font=bold", "bgcolor=#00dc28", "alpha=false"}}:render() ..
-			Button:new{x=btn_abs_x + btn_w + 0.1, y=2.6, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
+			Button:new{x=btn_abs_x + btn_w + 0.1, y=5.0, w=btn_w, h=0.75, name = "btn_play", label = ms_S("Play!")}:render()
 	end
 end
 

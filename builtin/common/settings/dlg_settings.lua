@@ -701,13 +701,13 @@ local function get_formspec(dialogdata)
 end
 
 
--- On Android, closing the app via the "Recents screen" won't result in a clean
--- exit, discarding any setting changes made by the user.
--- To avoid that, we write the settings file in more cases on Android.
+-- On mobile (Android "Recents screen", iOS swipe/background), closing the app
+-- does NOT run a clean exit, so setting changes would be discarded. To avoid
+-- that we flush the settings file on every change. This is the iOS fork, so we
+-- do it unconditionally: on desktop it is a harmless extra write, and on iOS
+-- PLATFORM cannot be relied upon (TargetConditionals makes it report "OSX").
 function write_settings_early()
-	if PLATFORM == "Android" then
-		core.settings:write()
-	end
+	core.settings:write()
 end
 
 local function regenerate_page_list(dialogdata)

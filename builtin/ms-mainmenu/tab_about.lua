@@ -24,6 +24,7 @@ local matematica_superpiatta = {
 	"Giulio Leoni <giulio.stemblocks@gmail.com>",
 	"Davide Modenese <modenesedavide@gmail.com>",
 	"Alessio Cecchin <acecchin@gmail.com>",
+	"Christian Garzella - Sound Designer",
 	"Avry Titouan",
 	"Marine Vincent",
 	"Matteo Bouvier",

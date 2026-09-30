@@ -599,17 +599,34 @@ bool setSystemPaths()
 	path_user = getAppleDocumentsDirectory();
 
 	// Seed a default minetest.conf from the bundle (path_share) into
-	// path_user on first launch. Lets the fork ship preconfigured
-	// graphics/touch/accessibility defaults without hard-coding them
-	// in settingtypes.txt. In-game changes are written to path_user
-	// only — the bundled file is never modified at runtime.
+	// path_user. Lets the fork ship preconfigured graphics/touch/
+	// accessibility defaults without hard-coding them in settingtypes.txt.
+	// In-game changes are written to path_user only — the bundled file is
+	// never modified at runtime.
+	//
+	// The seed is versioned: a marker file in path_user records which
+	// CONF_SEED_VERSION was last seeded. When the marker is missing or
+	// differs (app update that changed the curated defaults), the user conf
+	// is re-seeded so fixes like viewing_range reach existing installs too.
+	// Bump CONF_SEED_VERSION only when misc/ios/minetest.conf changes must
+	// override existing users' settings (it resets in-game customizations).
 	{
+		static const std::string CONF_SEED_VERSION = "1.3.1";
 		const std::string bundled_conf = path_share + DIR_DELIM + "minetest.conf";
 		const std::string user_conf    = path_user  + DIR_DELIM + "minetest.conf";
-		if (!fs::PathExists(user_conf) && fs::PathExists(bundled_conf)) {
+		const std::string seed_marker  = path_user  + DIR_DELIM + ".ms_conf_seed_version";
+
+		std::string seeded_version;
+		fs::ReadFile(seed_marker, seeded_version, false);
+		seeded_version = trim(std::move(seeded_version));
+
+		if (fs::PathExists(bundled_conf) &&
+				(!fs::PathExists(user_conf) || seeded_version != CONF_SEED_VERSION)) {
 			if (fs::CopyFileContents(bundled_conf, user_conf)) {
-				infostream << "Seeded default minetest.conf at first launch: "
-					<< user_conf << std::endl;
+				fs::safeWriteToFile(seed_marker, CONF_SEED_VERSION);
+				infostream << "Seeded default minetest.conf (version "
+					<< CONF_SEED_VERSION << ", previous '" << seeded_version
+					<< "'): " << user_conf << std::endl;
 			} else {
 				warningstream << "Failed to seed default minetest.conf at "
 					<< user_conf << std::endl;

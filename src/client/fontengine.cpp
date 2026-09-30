@@ -259,6 +259,15 @@ gui::IGUIFont *FontEngine::initFont(FontSpec spec)
 	u32 size = rangelim(spec.size * RenderingEngine::getDisplayDensity() *
 			g_settings->getFloat("gui_scaling"), 1U, 500U);
 
+	// Optional absolute cap on the rendered font size (px); 0 disables it.
+	// On high-density iOS displays the font gets oversized in legacy
+	// (non-real-coordinate) server formspecs, overflowing their boxes. Capping
+	// the pixel size fixes that; lower-density devices stay below the cap and
+	// are unaffected. Tune the threshold empirically.
+	u32 font_size_clamp = 0;
+	if (g_settings->getU32NoEx("font_size_clamp", font_size_clamp) && font_size_clamp > 0)
+		size = std::min(size, font_size_clamp);
+
 	// Constrain the font size to a certain multiple, if necessary
 	u16 divisible_by = g_settings->getU16(setting_prefix + "font_size_divisible_by");
 	if (divisible_by > 1) {

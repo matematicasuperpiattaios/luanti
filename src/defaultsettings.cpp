@@ -412,6 +412,9 @@ void set_default_settings()
 	settings->setDefault("font_size", font_size_str);
 	settings->setDefault("mono_font_size", font_size_str);
 	settings->setDefault("chat_font_size", "0"); // Default "font_size"
+	// MS: optional absolute cap (px) on the rendered font size, 0 = disabled.
+	// Used on iOS to stop high-density displays oversizing legacy formspec text.
+	settings->setDefault("font_size_clamp", "0");
 	// MS: master switch to disable in-game chat entirely on the client
 	// (no way to open the chat/command console, no chat buttons in the touch
 	// UI). Used by the iOS build (children's product; avoids App Store social

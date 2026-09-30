@@ -68,8 +68,10 @@ echo "Marketing version: $MARKETING_VERSION   Build number: $BUILD_NUMBER   Lua:
 # --- (re)generate the release device build dir --------------------------------
 step "Configure release device project ($BUILD_DIR)"
 if [ ! -e "$BUILD_DIR/$SCHEME.xcodeproj" ]; then
+	# Deployment target 18.2 (matches the deps) so the App Store build installs
+	# on iOS 18.2+, not only iOS 26. Delete $BUILD_DIR to re-target.
 	MS_LUA="$MS_LUA" tools/ios/ios_build_with_deps_ios26-v2.sh \
-		"" "" "$REPO_ROOT" "$DEPS_DEV" Release iPhoneOS 26 build "$BUILD_DIR"
+		"" "" "$REPO_ROOT" "$DEPS_DEV" Release iPhoneOS 18.2 build "$BUILD_DIR"
 else
 	echo "reusing existing $BUILD_DIR (delete it to reconfigure / switch MS_LUA)"
 fi

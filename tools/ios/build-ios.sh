@@ -29,16 +29,21 @@ for d in build-ios-simulator build-ios-device; do
   fi
 done
 
+# Deployment target = 18.2 (matches the precompiled deps under
+# luanti_ios_deps/ios18.2_deps), so the app installs on iOS 18.2+ instead of
+# only iOS 26. Going lower would require rebuilding the deps with a lower min.
+DEPLOY_TARGET=18.2
+
 echo "==== Genera build-ios-simulator ===="
 "$SCRIPT_DIR/ios_build_with_deps_ios26-v2.sh" \
   "" "" "$ROOT" "$DEPS_SIM" \
-  Debug iPhoneSimulator 26 build build-ios-simulator
+  Debug iPhoneSimulator "$DEPLOY_TARGET" build build-ios-simulator
 
 echo
 echo "==== Genera build-ios-device ===="
 "$SCRIPT_DIR/ios_build_with_deps_ios26-v2.sh" \
   "" "" "$ROOT" "$DEPS_DEV" \
-  Debug iPhoneOS 26 build build-ios-device
+  Debug iPhoneOS "$DEPLOY_TARGET" build build-ios-device
 
 echo
 echo "Fatto. Apri build-ios-simulator/luanti.xcodeproj da Xcode."

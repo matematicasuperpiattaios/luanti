@@ -82,7 +82,7 @@ end
 
 local function handle_whoareu_buttons(this, fields, tabname, tabdata)
 	if (fields.key_enter or fields.btn_next) then
-		if (fields.username ~= "") then
+		if ((fields.username or "") ~= "") then
 			while string.sub(fields.username, -1, -1) == ' ' do
 				fields.username = string.sub(fields.username, 1, -2)
 			end
@@ -183,7 +183,7 @@ local function handle_passwd_buttons(this, fields, tabname, tabdata)
 	--gamedata.playername = whoareu
 	--core.settings:set("name", whoareu)
 
-	if fields.passwd ~= "" and (fields.key_enter or fields.btn_play) then
+	if (fields.key_enter or fields.btn_play) and (fields.passwd or "") ~= "" then
 		-- Wiscom auth
 		while string.sub(fields.passwd, -1, -1) == ' ' do
 			fields.passwd = string.sub(fields.passwd, 1, -2)

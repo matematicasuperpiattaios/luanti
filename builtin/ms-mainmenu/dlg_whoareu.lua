@@ -52,11 +52,8 @@ function dump(o)
 local function get_whoareu_formspec(tabview, _, tabdata)
 	local bkg_w = 7.5
 	local btn_w = 2.2
-	local btn_halign_right = true
-	local btn_abs_x = 0.5
-	if btn_halign_right  then
-		btn_abs_x = bkg_w - (0.5 + btn_w * 2 + 0.1)
-	end
+	-- Center the two buttons horizontally in the box.
+	local btn_abs_x = (bkg_w - (btn_w * 2 + 0.1)) / 2
 	local fs = FormspecVersion:new{version=6}:render() ..
 		-- Taller box with all content clustered near the top: the formspec is
 		-- centered on screen, so keeping the input field high keeps it above the
@@ -151,11 +148,8 @@ end
 local function get_passwd_formspec(tabview, _, tabdata)
 	local bkg_w = 7.5
 	local btn_w = 2.2
-	local btn_halign_right = true
-	local btn_abs_x = 0.5
-	if btn_halign_right  then
-		btn_abs_x = bkg_w - (0.5 + btn_w * 2 + 0.1)
-	end
+	-- Center the two buttons horizontally in the box.
+	local btn_abs_x = (bkg_w - (btn_w * 2 + 0.1)) / 2
 	if hide_password(whoareu) then
 		core.log("Hide password of " .. whoareu)
 		return FormspecVersion:new{version=6}:render() ..
